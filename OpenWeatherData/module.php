@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
 class OpenWeatherData extends IPSModule
 {
-    use OpenWeatherMapCommon;
+    use OpenWeatherMapCommonLib;
+    use OpenWeatherMapLocalLib;
 
     public function Create()
     {
@@ -154,7 +156,7 @@ class OpenWeatherData extends IPSModule
 
         $appid = $this->ReadPropertyString('appid');
         if ($appid == '') {
-            $this->SetStatus(IS_INVALIDCONFIG);
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
             return;
         }
 
@@ -179,60 +181,197 @@ class OpenWeatherData extends IPSModule
 
     public function GetConfigurationForm()
     {
+        $formElements = $this->GetFormElements();
+        $formActions = $this->GetFormActions();
+        $formStatus = $this->GetFormStatus();
+
+        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+        if ($form == '') {
+            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
+            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
+        }
+        return $form;
+    }
+
+    private function GetFormElements()
+    {
         $formElements = [];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
-        $formElements[] = ['type' => 'Label', 'caption' => 'OpenWeatherMap - fetch current observations and forecast'];
-        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'appid', 'caption' => 'API-Key'];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'station data - if position is not set, Modue \'Location\' is used'];
-        $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'longitude', 'caption' => 'Longitude', 'suffix' => '°'];
-        $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'latitude', 'caption' => 'Latitude', 'suffix' => '°'];
-        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'altitude', 'caption' => 'Altitude', 'suffix' => 'm'];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'module_disable',
+            'caption' => 'Instance is disabled'
+        ];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'OpenWeatherMap - fetch current observations and forecast'
+        ];
+        $formElements[] = [
+            'type'    => 'ValidationTextBox',
+            'name'    => 'appid',
+            'caption' => 'API-Key'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'Language setting for textual weather-information (de, en, ...)'];
-        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'lang', 'caption' => 'Language code'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'station data - if position is not set, Modue \'Location\' is used'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'digits'  => 5,
+            'name'    => 'longitude',
+            'caption' => 'Longitude',
+            'suffix'  => '°'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'digits'  => 5,
+            'name'    => 'latitude',
+            'caption' => 'Latitude',
+            'suffix'  => '°'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'altitude',
+            'caption' => 'Altitude',
+            'suffix'  => 'm'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'optional weather data'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_pressure', 'caption' => ' ... absolute Pressure'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_absolute_humidity', 'caption' => ' ... absolute Humidity'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_dewpoint', 'caption' => ' ... Dewpoint'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_heatindex', 'caption' => ' ... Heatindex'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windchill', 'caption' => ' ... Windchill'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windstrength', 'caption' => ' ... Windstrength'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windstrength2text', 'caption' => ' ... Windstrength as text'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_windangle', 'caption' => ' ... Winddirection in degrees'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_winddirection', 'caption' => ' ... Winddirection with label'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_cloudiness', 'caption' => ' ... Cloudiness'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_conditions', 'caption' => ' ... Conditions'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_icon', 'caption' => ' ... Condition-icon'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_condition_id', 'caption' => ' ... Condition-id'];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'with_summary', 'caption' => ' ... html-box with summary of weather'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'Language setting for textual weather-information (de, en, ...)'
+        ];
+        $formElements[] = [
+            'type'    => 'ValidationTextBox',
+            'name'    => 'lang',
+            'caption' => 'Language code'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'script for alternate weather summary'];
-        $formElements[] = ['type' => 'SelectScript', 'name' => 'summary_script', 'caption' => 'script'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'optional weather data'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_absolute_pressure',
+            'caption' => ' ... absolute Pressure'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_absolute_humidity',
+            'caption' => ' ... absolute Humidity'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_dewpoint',
+            'caption' => ' ... Dewpoint'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_heatindex',
+            'caption' => ' ... Heatindex'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_windchill',
+            'caption' => ' ... Windchill'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_windstrength',
+            'caption' => ' ... Windstrength'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_windstrength2text',
+            'caption' => ' ... Windstrength as text'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_windangle',
+            'caption' => ' ... Winddirection in degrees'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_winddirection',
+            'caption' => ' ... Winddirection with label'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_cloudiness',
+            'caption' => ' ... Cloudiness'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_conditions',
+            'caption' => ' ... Conditions'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_icon',
+            'caption' => ' ... Condition-icon'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_condition_id',
+            'caption' => ' ... Condition-id'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_summary',
+            'caption' => ' ... html-box with summary of weather'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => '3-hour forecast (max 5 days every 3rd hour = 40)'];
-        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'hourly_forecast_count', 'caption' => 'Count'];
-        $formElements[] = ['type' => 'Label', 'caption' => ' ... attention: decreasing the number deletes the unused variables!'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'script for alternate weather summary'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectScript',
+            'name'    => 'summary_script',
+            'caption' => 'script'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'Update weatherdata every X minutes'];
-        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'update_interval', 'caption' => 'Minutes'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => '3-hour forecast (max 5 days every 3rd hour = 40)'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'hourly_forecast_count',
+            'caption' => 'Count'
+        ];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => ' ... attention: decreasing the number deletes the unused variables!'
+        ];
 
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'Update weatherdata every X minutes'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'update_interval',
+            'caption' => 'Minutes'
+        ];
+
+        return $formElements;
+    }
+
+    private function GetFormActions()
+    {
         $formActions = [];
-        $formActions[] = ['type' => 'Button', 'caption' => 'Update weatherdata', 'onClick' => 'OpenWeatherData_UpdateData($id);'];
 
-        $formStatus = [];
-        $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-        $formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
-        $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
-        $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
+        $formActions[] = [
+            'type'    => 'Button',
+            'caption' => 'Update weatherdata',
+            'onClick' => 'OpenWeatherData_UpdateData($id);'
+        ];
 
-        $formStatus[] = ['code' => IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid configuration)'];
-        $formStatus[] = ['code' => IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
-        $formStatus[] = ['code' => IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
-        $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
-        return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+        return $formActions;
     }
 
     protected function SetUpdateInterval()
@@ -244,8 +383,7 @@ class OpenWeatherData extends IPSModule
 
     public function UpdateData()
     {
-        $inst = IPS_GetInstance($this->InstanceID);
-        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+        if ($this->GetStatus() == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
         }
@@ -268,8 +406,7 @@ class OpenWeatherData extends IPSModule
 
     public function UpdateCurrent()
     {
-        $inst = IPS_GetInstance($this->InstanceID);
-        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+        if ($this->GetStatus() == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
         }
@@ -429,8 +566,7 @@ class OpenWeatherData extends IPSModule
 
     public function UpdateHourlyForecast()
     {
-        $inst = IPS_GetInstance($this->InstanceID);
-        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+        if ($this->GetStatus() == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
         }
@@ -725,23 +861,23 @@ class OpenWeatherData extends IPSModule
         $err = '';
         $jdata = '';
         if ($cerrno) {
-            $statuscode = IS_SERVERERROR;
+            $statuscode = self::$IS_SERVERERROR;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
         } elseif ($httpcode != 200) {
             if ($httpcode >= 500 && $httpcode <= 599) {
-                $statuscode = IS_SERVERERROR;
+                $statuscode = self::$IS_SERVERERROR;
                 $err = "got http-code $httpcode (server error)";
             } else {
                 $err = "got http-code $httpcode";
-                $statuscode = IS_HTTPERROR;
+                $statuscode = self::$IS_HTTPERROR;
             }
         } elseif ($cdata == '') {
-            $statuscode = IS_INVALIDDATA;
+            $statuscode = self::$IS_INVALIDDATA;
             $err = 'no data';
         } else {
             $jdata = json_decode($cdata, true);
             if ($jdata == '') {
-                $statuscode = IS_INVALIDDATA;
+                $statuscode = self::$IS_INVALIDDATA;
                 $err = 'malformed response';
             }
         }

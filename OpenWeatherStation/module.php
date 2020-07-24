@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
 class OpenWeatherStation extends IPSModule
 {
-    use OpenWeatherMapCommon;
+    use OpenWeatherMapCommonLib;
+    use OpenWeatherMapLocalLib;
 
     public function Create()
     {
@@ -70,7 +72,7 @@ class OpenWeatherStation extends IPSModule
 
         $appid = $this->ReadPropertyString('appid');
         if ($appid == '') {
-            $this->SetStatus(IS_INVALIDCONFIG);
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
             return;
         }
 
@@ -110,56 +112,184 @@ class OpenWeatherStation extends IPSModule
 
     public function GetConfigurationForm()
     {
+        $formElements = $this->GetFormElements();
+        $formActions = $this->GetFormActions();
+        $formStatus = $this->GetFormStatus();
+
+        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+        if ($form == '') {
+            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
+            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
+            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
+        }
+        return $form;
+    }
+
+    private function GetFormElements()
+    {
         $formElements = [];
-        $formElements[] = ['type' => 'CheckBox', 'name' => 'module_disable', 'caption' => 'Instance is disabled'];
-        $formElements[] = ['type' => 'Label', 'caption' => 'OpenWeatherMap - Transmission of measurement values of own weather station'];
-        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'appid', 'caption' => 'API-Key'];
 
-        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'station_id', 'caption' => 'Station-ID'];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'module_disable',
+            'caption' => 'Instance is disabled'
+        ];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'OpenWeatherMap - Transmission of measurement values of own weather station'
+        ];
+        $formElements[] = [
+            'type'    => 'ValidationTextBox',
+            'name'    => 'appid',
+            'caption' => 'API-Key'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'station data - if position is not set, Modue \'Location\' is used'];
-        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'external_id', 'caption' => 'external ID'];
-        $formElements[] = ['type' => 'ValidationTextBox', 'name' => 'name', 'caption' => 'Name'];
-        $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'longitude', 'caption' => 'Longitude', 'suffix' => '°'];
-        $formElements[] = ['type' => 'NumberSpinner', 'digits' => 5, 'name' => 'latitude', 'caption' => 'Latitude', 'suffix' => '°'];
-        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'altitude', 'caption' => 'Altitude', 'suffix' => 'm'];
+        $formElements[] = [
+            'type'    => 'ValidationTextBox',
+            'name'    => 'station_id',
+            'caption' => 'Station-ID'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'Variables with measurement values'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'dt_var', 'caption' => 'Time of measurement'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'temperature_var', 'caption' => 'Temperature (°C)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'wind_speed_var', 'caption' => 'Wind speed (m/s)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'wind_gust_var', 'caption' => 'Wind gusts (m/s)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'wind_deg_var', 'caption' => 'Wind direction (°)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'pressure_var', 'caption' => 'Pressure (mbar)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'humidity_var', 'caption' => 'Humidity (%)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'rain_1h_var', 'caption' => 'Rainfall 1h (mm)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'rain_6h_var', 'caption' => 'Rainfall 6h (mm)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'rain_24h_var', 'caption' => 'Rainfall today (mm)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'snow_1h_var', 'caption' => 'Snow 1h (mm)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'snow_6h_var', 'caption' => 'Snow 6h (mm)'];
-        $formElements[] = ['type' => 'SelectVariable', 'name' => 'snow_24h_var', 'caption' => 'Snow today (mm)'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'station data - if position is not set, Modue \'Location\' is used'
+        ];
+        $formElements[] = [
+            'type'    => 'ValidationTextBox',
+            'name'    => 'external_id',
+            'caption' => 'external ID'
+        ];
+        $formElements[] = [
+            'type'    => 'ValidationTextBox',
+            'name'    => 'name',
+            'caption' => 'Name'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'digits'  => 5,
+            'name'    => 'longitude',
+            'caption' => 'Longitude',
+            'suffix'  => '°'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'digits'  => 5,
+            'name'    => 'latitude',
+            'caption' => 'Latitude',
+            'suffix'  => '°'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'altitude',
+            'caption' => 'Altitude',
+            'suffix'  => 'm'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'script to convert values'];
-        $formElements[] = ['type' => 'SelectScript', 'name' => 'convert_script', 'caption' => 'script'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'Variables with measurement values'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'dt_var',
+            'caption' => 'Time of measurement'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'temperature_var',
+            'caption' => 'Temperature (°C)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'wind_speed_var',
+            'caption' => 'Wind speed (m/s)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'wind_gust_var',
+            'caption' => 'Wind gusts (m/s)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'wind_deg_var',
+            'caption' => 'Wind direction (°)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'pressure_var',
+            'caption' => 'Pressure (mbar)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'humidity_var',
+            'caption' => 'Humidity (%)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'rain_1h_var',
+            'caption' => 'Rainfall 1h (mm)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'rain_6h_var',
+            'caption' => 'Rainfall 6h (mm)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'rain_24h_var',
+            'caption' => 'Rainfall today (mm)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'snow_1h_var',
+            'caption' => 'Snow 1h (mm)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'snow_6h_var',
+            'caption' => 'Snow 6h (mm)'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectVariable',
+            'name'    => 'snow_24h_var',
+            'caption' => 'Snow today (mm)'
+        ];
 
-        $formElements[] = ['type' => 'Label', 'caption' => 'Transmit weatherdata every X minutes'];
-        $formElements[] = ['type' => 'NumberSpinner', 'name' => 'transmit_interval', 'caption' => 'Minutes'];
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'script to convert values'
+        ];
+        $formElements[] = [
+            'type'    => 'SelectScript',
+            'name'    => 'convert_script',
+            'caption' => 'script'
+        ];
 
+        $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'Transmit weatherdata every X minutes'
+        ];
+        $formElements[] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'transmit_interval',
+            'caption' => 'Minutes'
+        ];
+
+        return $formElements;
+    }
+
+    private function GetFormActions()
+    {
         $formActions = [];
-        $formActions[] = ['type' => 'Button', 'caption' => 'Transmit weatherdata', 'onClick' => 'OpenWeatherStation_TransmitMeasurements($id);'];
 
-        $formStatus = [];
-        $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-        $formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
-        $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
-        $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
+        $formActions[] = [
+            'type'    => 'Button',
+            'caption' => 'Transmit weatherdata',
+            'onClick' => 'OpenWeatherStation_TransmitMeasurements($id);'
+        ];
 
-        $formStatus[] = ['code' => IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid configuration)'];
-        $formStatus[] = ['code' => IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
-        $formStatus[] = ['code' => IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
-        $formStatus[] = ['code' => IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
-        return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+        return $formActions;
     }
 
     protected function SetTransmitInterval()
@@ -358,8 +488,7 @@ class OpenWeatherStation extends IPSModule
 
     private function do_HttpRequest($cmd, $args, $postdata, $mode, &$result)
     {
-        $inst = IPS_GetInstance($this->InstanceID);
-        if ($inst['InstanceStatus'] == IS_INACTIVE) {
+        if ($this->GetStatus() == IS_INACTIVE) {
             $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
             return;
         }
@@ -426,25 +555,25 @@ class OpenWeatherStation extends IPSModule
         $err = '';
         $result = '';
         if ($cerrno) {
-            $statuscode = IS_INVALIDDATA;
+            $statuscode = self::$IS_INVALIDDATA;
             $err = 'got curl-errno ' . $cerrno . ' (' . $cerror . ')';
         } elseif ($httpcode < 200 || $httpcode > 299) {
             if ($httpcode >= 500 && $httpcode <= 599) {
-                $statuscode = IS_SERVERERROR;
+                $statuscode = self::$IS_SERVERERROR;
                 $err = "got http-code $httpcode (server error)";
             } else {
                 $err = "got http-code $httpcode";
-                $statuscode = IS_HTTPERROR;
+                $statuscode = self::$IS_HTTPERROR;
             }
         } elseif ($cdata == '') {
             if ($httpcode < 200 || $httpcode > 299) {
-                $statuscode = IS_INVALIDDATA;
+                $statuscode = self::$IS_INVALIDDATA;
                 $err = 'no data';
             }
         } else {
             $result = json_decode($cdata, true);
             if ($result == '') {
-                $statuscode = IS_INVALIDDATA;
+                $statuscode = self::$IS_INVALIDDATA;
                 $err = 'malformed response';
             }
         }
