@@ -81,7 +81,7 @@ Verweise:
   - LICENSE.md hinzugefügt
   - define's durch statische Klassen-Variablen ersetzt
   - lokale Funktionen aus common.php in locale.php verlagert
-  - Reihenfolge Breiてen- und Längegrad geändert
+  - Reihenfolge Breiten- und Längengrad geändert
 
 - 1.21 @ 30.12.2019 10:56
   - Anpassungen an IPS 5.3
