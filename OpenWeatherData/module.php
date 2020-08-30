@@ -221,15 +221,15 @@ class OpenWeatherData extends IPSModule
         $formElements[] = [
             'type'    => 'NumberSpinner',
             'digits'  => 5,
-            'name'    => 'longitude',
-            'caption' => 'Longitude',
+            'name'    => 'latitude',
+            'caption' => 'Latitude',
             'suffix'  => '°'
         ];
         $formElements[] = [
             'type'    => 'NumberSpinner',
             'digits'  => 5,
-            'name'    => 'latitude',
-            'caption' => 'Latitude',
+            'name'    => 'longitude',
+            'caption' => 'Longitude',
             'suffix'  => '°'
         ];
         $formElements[] = [

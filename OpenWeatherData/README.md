@@ -95,8 +95,8 @@ ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß 
 | :-----------------------: | :-----: | :----------: | :----------------------------------------: |
 | appid                     | string  |              | API-Schlüssel von _OpenWeatherMap_         |
 |                           |         |              |                                            |
-| longitude                 | float   |              | Längengrad der Station                     |
 | latitude                  | float   |              | Breitengrad der Station                    |
+| longitude                 | float   |              | Längengrad der Station                     |
 | altitude                  | float   |              | Höhe der Station über dem Meeresspiegel in Metern |
 |                           |         |              |                                            |
 | lang                      | string  |              | Spracheinstellung für textuelle Angaben    |
