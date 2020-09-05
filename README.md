@@ -77,7 +77,7 @@ Verweise:
 
 ## 7. Versions-Historie
 
-- 1.22 @ 30.08.2020 12:25 (beta)
+- 1.22 @ 30.08.2020 12:25
   - LICENSE.md hinzugefügt
   - define's durch statische Klassen-Variablen ersetzt
   - lokale Funktionen aus common.php in locale.php verlagert
