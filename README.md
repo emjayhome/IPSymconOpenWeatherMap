@@ -77,6 +77,9 @@ Verweise:
 
 ## 7. Versions-Historie
 
+- 1.23 @ 17.12.2020 13:53 (beta)
+  - Regenwahrscheinlichkeit bei der Vorhersage hinzugefügt
+
 - 1.22 @ 30.08.2020 12:25
   - LICENSE.md hinzugefügt
   - define's durch statische Klassen-Variablen ersetzt

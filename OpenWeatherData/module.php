@@ -36,6 +36,7 @@ class OpenWeatherData extends IPSModule
         $this->RegisterPropertyBoolean('with_windstrength2text', false);
         $this->RegisterPropertyBoolean('with_windangle', true);
         $this->RegisterPropertyBoolean('with_winddirection', false);
+        $this->RegisterPropertyBoolean('with_rain_probability', false);
         $this->RegisterPropertyBoolean('with_cloudiness', false);
         $this->RegisterPropertyBoolean('with_conditions', false);
         $this->RegisterPropertyBoolean('with_icon', false);
@@ -59,6 +60,7 @@ class OpenWeatherData extends IPSModule
         $this->CreateVarProfile('OpenWeatherMap.WindAngle', VARIABLETYPE_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection');
         $this->CreateVarProfile('OpenWeatherMap.WindDirection', VARIABLETYPE_STRING, '', 0, 0, 0, 0, 'WindDirection');
         $this->CreateVarProfile('OpenWeatherMap.Rainfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Rainfall');
+        $this->CreateVarProfile('OpenWeatherMap.RainProbability', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Rainfall');
         $this->CreateVarProfile('OpenWeatherMap.Snowfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Snow');
         $this->CreateVarProfile('OpenWeatherMap.Cloudiness', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Cloud');
 
@@ -91,6 +93,7 @@ class OpenWeatherData extends IPSModule
         $with_windstrength2text = $this->ReadPropertyBoolean('with_windstrength2text');
         $with_windangle = $this->ReadPropertyBoolean('with_windangle');
         $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
+        $with_rain_probability = $this->ReadPropertyBoolean('with_rain_probability');
         $with_cloudiness = $this->ReadPropertyBoolean('with_cloudiness');
         $with_conditions = $this->ReadPropertyBoolean('with_conditions');
         $with_icon = $this->ReadPropertyBoolean('with_icon');
@@ -141,6 +144,7 @@ class OpenWeatherData extends IPSModule
             $this->MaintainVariable($pre . 'WindDirection' . $post, $this->Translate('Winddirection') . $s, VARIABLETYPE_STRING, 'OpenWeatherMap.WindDirection', $vpos++, $use && $with_winddirection);
             $this->MaintainVariable($pre . 'Rain_3h' . $post, $this->Translate('Rainfall') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Rainfall', $vpos++, $use);
             $this->MaintainVariable($pre . 'Snow_3h' . $post, $this->Translate('Snowfall') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Snowfall', $vpos++, $use);
+            $this->MaintainVariable($pre . 'RainProbability' . $post, $this->Translate('Rain propability') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.RainProbability', $vpos++, $use && $with_rain_probability);
             $this->MaintainVariable($pre . 'Cloudiness' . $post, $this->Translate('Cloudiness') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Cloudiness', $vpos++, $use && $with_cloudiness);
             $this->MaintainVariable($pre . 'Conditions' . $post, $this->Translate('Conditions') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_conditions);
             $this->MaintainVariable($pre . 'ConditionIcon' . $post, $this->Translate('Condition-icon') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_icon);
@@ -297,6 +301,11 @@ class OpenWeatherData extends IPSModule
             'type'    => 'CheckBox',
             'name'    => 'with_winddirection',
             'caption' => ' ... Winddirection with label'
+        ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_rain_probability',
+            'caption' => ' ... Rain propability'
         ];
         $formElements[] = [
             'type'    => 'CheckBox',
@@ -614,6 +623,7 @@ class OpenWeatherData extends IPSModule
         $with_windstrength2text = $this->ReadPropertyBoolean('with_windstrength2text');
         $with_windangle = $this->ReadPropertyBoolean('with_windangle');
         $with_winddirection = $this->ReadPropertyBoolean('with_winddirection');
+        $with_rain_probability = $this->ReadPropertyBoolean('with_rain_probability');
         $with_cloudiness = $this->ReadPropertyBoolean('with_cloudiness');
         $with_conditions = $this->ReadPropertyBoolean('with_conditions');
         $with_icon = $this->ReadPropertyBoolean('with_icon');
@@ -643,6 +653,8 @@ class OpenWeatherData extends IPSModule
 
             $rain_3h = $this->GetArrayElem($ent, 'rain.3h', 0);
             $snow_3h = $this->GetArrayElem($ent, 'snow.3h', 0);
+            $pop = $this->GetArrayElem($ent, 'pop', 0);
+
             $clouds = $this->GetArrayElem($ent, 'clouds.all', 0);
             $conditions = $this->GetArrayElem($ent, 'weather.0.description', '');
 
@@ -694,6 +706,8 @@ class OpenWeatherData extends IPSModule
             $this->SetValue($pre . 'Rain_3h' . $post, $rain_3h);
 
             $this->SetValue($pre . 'Snow_3h' . $post, $snow_3h);
+
+            $this->SetValue($pre . 'RainProbability' . $post, $pop);
 
             if ($with_cloudiness) {
                 $this->SetValue($pre . 'Cloudiness' . $post, $clouds);

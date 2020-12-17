@@ -109,6 +109,7 @@ ermittelt aus der Windstärke (in bft) die korespondierende Bezeichnung gemäß 
 | with_windstrength         | boolean | false        | Windstärke                                 |
 | with_windstrength2text    | boolean | false        | Windstärke                                 |
 | with_windangle            | boolean | true         | Windrichtung in Grad                       |
+| with_rain_probability     | boolean | false        | Regenwahrscheinlichkeit                    |
 | with_cloudiness           | boolean | false        | Bewölkung                                  |
 | with_conditions           | boolean | false        | Wetterbedingungen                          |
 | with_icons                | boolean | false        | Wetterbedingung-Symbole                    |
@@ -165,7 +166,7 @@ Es werden folgende Variableprofile angelegt:
 OpenWeatherMap.WindStrength, OpenWeatherMap.WindAngle
 
 * Float<br>
-OpenWeatherMap.Temperatur, OpenWeatherMap.Humidity, OpenWeatherMap.absHumidity, OpenWeatherMap.Dewpoint, OpenWeatherMap.Heatindex, OpenWeatherMap.Pressure, OpenWeatherMap.WindSpeed, OpenWeatherMap.Rainfall, OpenWeatherMap.Snowfall, OpenWeatherMap.Cloudiness
+OpenWeatherMap.absHumidity, OpenWeatherMap.Cloudiness, OpenWeatherMap.Dewpoint, OpenWeatherMap.Heatindex, OpenWeatherMap.Humidity, OpenWeatherMap.Pressure, OpenWeatherMap.Rainfall, OpenWeatherMap.RainProbability, OpenWeatherMap.Snowfall, OpenWeatherMap.Temperatur, OpenWeatherMap.WindSpeed
 
 * String<br>
 OpenWeatherMap.WindDirection
