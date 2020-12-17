@@ -48,7 +48,7 @@ und mit _OK_ bestätigen.
 Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Modules_
 
 ### Anmeldung bei _OpenWeatherMap_
-Man muss hier (_https://home.openweathermap.org/users/sign_up_) ein Account erstellen. Nach Anmeldung kann man in dem Punkt _API keys_ einen API-Key erzeugen bzw. diese verwalten.
+Man muss hier (_https://home.openweathermap.org/users/sign_up_) einen Account erstellen. Nach erfolgter Anmeldung kann man in dem Punkt _API keys_ einen API-Key erzeugen bzw. diese verwalten.
 
 ### Einrichtung in IPS
 
