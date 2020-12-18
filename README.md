@@ -77,7 +77,8 @@ Verweise:
 
 ## 7. Versions-Historie
 
-- 1.23 @ 17.12.2020 13:53 (beta)
+- 1.23 @ 18.12.2020 14:28
+  - PHP_CS_FIXER_IGNORE_ENV=1 in github/workflows/style.yml eingefügt
   - Regenwahrscheinlichkeit bei der Vorhersage hinzugefügt
 
 - 1.22 @ 30.08.2020 12:25
