@@ -707,9 +707,9 @@ class OpenWeatherData extends IPSModule
 
             $this->SetValue($pre . 'Snow_3h' . $post, $snow_3h);
 
-			if ($with_rain_probability) {
-				$this->SetValue($pre . 'RainProbability' . $post, (float) $pop * 100);
-			}
+            if ($with_rain_probability) {
+                $this->SetValue($pre . 'RainProbability' . $post, (float) $pop * 100);
+            }
 
             if ($with_cloudiness) {
                 $this->SetValue($pre . 'Cloudiness' . $post, $clouds);
