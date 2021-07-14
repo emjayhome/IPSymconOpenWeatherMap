@@ -77,6 +77,9 @@ Verweise:
 
 ## 7. Versions-Historie
 
+- 1.24 @ 14.07.2021 18:51 (beta)
+  - Schalter "Instanz ist deaktiviert" umbenannt in "Instanz deaktivieren"
+
 - 1.23 @ 20.12.2020 14:35
   - PHP_CS_FIXER_IGNORE_ENV=1 in github/workflows/style.yml eingefügt
   - Regenwahrscheinlichkeit bei der Vorhersage hinzugefügt
