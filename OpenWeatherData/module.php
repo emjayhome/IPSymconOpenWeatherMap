@@ -46,6 +46,8 @@ class OpenWeatherData extends IPSModule
 
         $this->RegisterPropertyInteger('update_interval', 5);
 
+        $this->RegisterPropertyBoolean('with_current_condition', false);
+
         $this->RegisterPropertyBoolean('with_summary', false);
         $this->RegisterPropertyInteger('summary_script', 0);
 
@@ -100,6 +102,7 @@ class OpenWeatherData extends IPSModule
         $with_condition_id = $this->ReadPropertyBoolean('with_condition_id');
         $hourly_forecast_count = $this->ReadPropertyInteger('hourly_forecast_count');
         $with_summary = $this->ReadPropertyBoolean('with_summary');
+        $with_current_condition = $this->ReadPropertyBoolean('with_current_condition');
 
         $vpos = 0;
         $this->MaintainVariable('Temperature', $this->Translate('Temperature'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Temperatur', $vpos++, true);
@@ -122,6 +125,7 @@ class OpenWeatherData extends IPSModule
         $this->MaintainVariable('ConditionIcon', $this->Translate('Condition-icon'), VARIABLETYPE_STRING, '', $vpos++, $with_icon);
         $this->MaintainVariable('ConditionId', $this->Translate('Condition-id'), VARIABLETYPE_STRING, '', $vpos++, $with_condition_id);
         $this->MaintainVariable('LastMeasurement', $this->Translate('last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
+        $this->MaintainVariable('CurrentCondition', $this->Translate('Current weather condition'), VARIABLETYPE_STRING, '~HTMLBox', $vpos++, $with_current_condition);
         $this->MaintainVariable('WeatherSummary', $this->Translate('Summary of weather'), VARIABLETYPE_STRING, '~HTMLBox', $vpos++, $with_summary);
 
         for ($i = 0; $i < 40; $i++) {
@@ -342,6 +346,11 @@ class OpenWeatherData extends IPSModule
             'name'    => 'summary_script',
             'caption' => 'script'
         ];
+        $formElements[] = [
+            'type'    => 'CheckBox',
+            'name'    => 'with_current_condition',
+            'caption' => ' ... html-box with current weather condition'
+        ];
 
         $formElements[] = [
             'type'    => 'Label',
@@ -397,11 +406,10 @@ class OpenWeatherData extends IPSModule
             return;
         }
 
-        $with_summary = $this->ReadPropertyBoolean('with_summary');
-
         $this->UpdateCurrent();
         $this->UpdateHourlyForecast();
 
+        $with_summary = $this->ReadPropertyBoolean('with_summary');
         if ($with_summary) {
             $summary_script = $this->ReadPropertyInteger('summary_script');
             if ($summary_script > 0) {
@@ -410,6 +418,12 @@ class OpenWeatherData extends IPSModule
                 $html = $this->Build_WeatherSummary();
             }
             $this->SetValue('WeatherSummary', $html);
+        }
+
+        $with_current_condition = $this->ReadPropertyBoolean('with_current_condition');
+        if ($with_current_condition) {
+            $html = $this->Build_CurrentCondition();
+            $this->SetValue('CurrentCondition', $html);
         }
     }
 
@@ -752,7 +766,7 @@ class OpenWeatherData extends IPSModule
 <table>
   <tr>
 
-    <td align="center" valign="top" style="width:140px;padding-left:20px;">
+    <td align="center" valign="top" style="width: 140px; padding: 0px; padding-left: 20px;">
       ' . $this->Translate('current') . '<br>';
         if ($icon != '') {
             $html .= '
@@ -763,19 +777,19 @@ class OpenWeatherData extends IPSModule
         ' . round($temperature) . '°C<br>
         ' . round($humidity) . '%<br>
       </div>
-      <div style="clear: both; font-size: 11px;">
+      <div style="clear: both; font-size: 11px; padding: 0px">
         <table>
           <tr>
             <td>' . $this->Translate('Ø Wind') . '</td>
-            <td>' . $wind_speed . ' km/h<td>
+            <td>' . $wind_speed . '&nbsp;km/h<td>
           </tr>
           <tr>
             <td>' . $this->Translate('Rain 3h') . '</td>
-            <td>' . $rain_3h . ' mm</td>
+            <td>' . $rain_3h . '&nbsp;mm</td>
           </tr>
           <tr>
             <td>' . $this->Translate('Cloudiness') . '</td>
-            <td>' . $clouds . ' %</td>
+            <td>' . $clouds . '&nbsp;%</td>
           </tr>
         </table>
       </div>
@@ -800,7 +814,7 @@ class OpenWeatherData extends IPSModule
             $time = date('H:i', $timestamp);
 
             $html .= '
-    <td align="center" valign="top" style="width: 140px; padding-left: 20px;">
+    <td align="center" valign="top" style="width: 140px; padding: 0px; padding-left: 20px;">
       ' . $this->Translate($weekDay) . ' <font size="2">' . $time . '</font><br>';
             if ($icon != '') {
                 $html .= '
@@ -811,19 +825,19 @@ class OpenWeatherData extends IPSModule
         ' . round($temperature_min) . '°C<br>
         ' . round($temperature_max) . '°C<br>
       </div>
-      <div style="clear: both; font-size: 11px;">
+      <div style="clear: both; font-size: 11px; padding: 0px">
         <table>
           <tr>
             <td>' . $this->Translate('Ø Wind') . '</td>
-            <td>' . $wind_speed . ' km/h<td>
+            <td>' . $wind_speed . '&nbsp;km/h<td>
           </tr>
           <tr>
             <td>' . $this->Translate('Rain 3h') . '</td>
-            <td>' . $rain_3h . ' mm</td>
+            <td>' . $rain_3h . '&nbsp;mm</td>
           </tr>
           <tr>
             <td>' . $this->Translate('Cloudiness') . '</td>
-            <td>' . $clouds . ' %</td>
+            <td>' . $clouds . '&nbsp;%</td>
           </tr>
         </table>
       </div>
@@ -835,6 +849,15 @@ class OpenWeatherData extends IPSModule
   </tr>
 </table>';
 
+        return $html;
+    }
+
+    private function Build_CurrentCondition()
+    {
+        $img_url = 'http://openweathermap.org/img/w/';
+
+        $icon = $this->GetValue('ConditionIcon');
+        $html = '<img src="' . $img_url . $icon . '.png">';
         return $html;
     }
 

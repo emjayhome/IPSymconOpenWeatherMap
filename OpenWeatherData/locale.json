@@ -34,6 +34,7 @@
 			" ... Condition-id": " ... Wetterbedingung-Id",
 			" ... html-box with summary of weather": " ... HTML-Box mit der Zusammenfassung des Wetters",
 			"script for alternate weather summary": "Script zur alternativen Zusammenfassung des Wetters",
+			" ... html-box with current weather condition": " ... HTML-Box mit aktueller Wetterbedingung",
 			"script": "Script",
 
 			"3-hour forecast (max 5 days every 3rd hour = 40)": "3-stündliche Vorhersage (max. 5 Tage jede 3. Stunde = 40)",
@@ -61,6 +62,7 @@
 			"Snowfall of last 3 hours": "Schneefall der letzten drei Stunden",
 			"Snowfall": "Schneefall",
 			"Summary of weather": "Zusammenfassung des Wetters",
+			"Current weather condition": "aktuelle Wetterbedingung",
 			"Temperature": "Temperatur",
 			"Windchill": "Windchill",
 			"Winddirection": "Windrichtung",
