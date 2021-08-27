@@ -78,7 +78,7 @@ Verweise:
 ## 7. Versions-Historie
 
 - 1.25 @ 26.08.2021 18:37 (beta)
-  - Überarbeitung der Darstellubg der Wetter-Zusammenfassung
+  - Überarbeitung der Darstellung der Wetter-Zusammenfassung
   - HTML-Box mit dem Icon der aktuellen Wetterbedingung
 
 - 1.24 @ 14.07.2021 18:51
