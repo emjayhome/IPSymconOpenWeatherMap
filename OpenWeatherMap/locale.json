@@ -1,0 +1,128 @@
+{
+	"translations": {
+		"de": {
+			"Disable instance": "Instanz deaktivieren",
+
+			"OpenWeatherMap - fetch current observations and forecast":
+				"OpenWeatherMap - Abruf aktueller Beobachtungen und Vorhersagen",
+			"station data - if position is not set, Modue 'Location' is used":
+				"Angaben zur Station - falls die Position nicht angegeben ist, wird das Modul 'Location' verwendet",
+			"Longitude" : "Längengrad",
+			"Latitude" : "Breitengrad",
+			"Altitude" : "Höhe",
+
+			"API-Key": "API-Key",
+
+			"Language setting for textual weather-information (de, en, ...)":
+				"Spracheinstellung für textuelle Wetterinformationen (de, en, ...)",
+			"Language code": "Sprach-Code",
+
+			"Basic settings": "Grundeinstellung",
+
+			"optional weather data": "optionale Wetterdaten",
+			" ... absolute Pressure": " ... absoluter Luftdruck",
+			" ... absolute Humidity": " ... absolute Luftfeuchte",
+			" ... Dewpoint": " ... Taupunkt",
+			" ... Windchill": " ... Windchill (Windkühle)",
+			" ... Heatindex": " ... Hitzeindex",
+			" ... UV-Index": " ... UV-Index",
+			" ... Windstrength": " ... Windstärke",
+			" ... Windstrength as text": " ... Windstärke als Text",
+			" ... Winddirection in degrees": " ... Windrichtung in Grad",
+			" ... Winddirection with label": " ... Windrichtung mit Text",
+			" ... Rain propability": " ... Regenwahrscheinlichkeit",
+			" ... Cloudiness": " ... Bewölkung",
+			" ... Conditions": " ... Wetterbedingungen",
+			" ... Condition-icon": " ... Wetterbedingung-Symbol",
+			" ... Condition-id": " ... Wetterbedingung-Id",
+
+			"precipitation forecast by the minute (max 60 minutes)":
+				"minütliche Niederschlagsvorhersage (max 60 Minuten)",
+			"hourly forecast (max 48 hour)": "stündliche Vorhersage (max. 48 Stunden)",
+			"daily forecast (max 7 days)": "tägliche Vorhersage (max. 7 Tage)",
+			" ... attention: decreasing the number deletes the unused variables!":
+				" ... Achtung: ein Verringern der Anzahl löscht die überflüssigen Variablen!",
+			"Count": "Anzahl",
+
+			"Begin of minutely forecast-period": "Beginn des minütlichen Vorhersage-Zeitraumes",
+			"Begin of hourly forecast-period": "Beginn des stündlichen Vorhersage-Zeitraumes",
+			"Begin of daily forecast-period": "Beginn des täglichen Vorhersage-Zeitraumes",
+
+			"absolute humidity": "absolute Luftfeuchtigkeit",
+			"absolute pressure": "absoluter Luftdruck",
+			"Air pressure": "Luftdruck",
+			"Cloudiness": "Bewölkung",
+			"Condition-icon": "Wetterbedingung-Symbol",
+			"Condition-id": "Wetterbedingung-Id",
+			"Conditions": "Wetterbedingungen",
+			"Current weather condition": "aktuelle Wetterbedingung",
+            "Day temperature": "Tagestemperatur",
+			"Dewpoint": "Taupunkt",
+            "Evening temperature": "Abendtemperatur",
+			"Heatindex": "Hitzeindex",
+			"Humidity": "Luftfeuchtigkeit",
+			"last measurement": "letzte Messung",
+			"maximum temperature": "maximale Temperatur",
+			"minimum temperature": "minimale Temperatur",
+			"Morning temperature": "Morgentemperatur",
+            "Night temperature": "Nachtemperatur",
+			"Rainfall of last hour": "Regenmenge der letzten Stunde",
+			"Rainfall": "Regenmenge",
+			"Rain propability": "Regenwahrscheinlichkeit",
+			"Snowfall of last hour": "Schneefall der letzten Stunde",
+			"Temperature": "Temperatur",
+			"Windchill": "Windchill",
+			"Winddirection": "Windrichtung",
+			"Windgust": "Windböen",
+			"Windspeed": "Windgeschwindigkeit",
+			"Windstrength": "Windstärke",
+
+			"N": "N",
+			"NNE": "NNO",
+			"NE": "NO",
+			"ENE": "ONO",
+			"E": "O",
+			"ESE": "OSO",
+			"SE": "SO",
+			"SSE": "SSO",
+			"S": "S",
+			"SSW": "SSW",
+			"SW": "SW",
+			"WSW": "WSW",
+			"W": "W",
+			"WNW": "WNW",
+			"NW": "NW",
+			"NNW": "NNW",
+
+			"Calm": "Windstille",
+			"Light air": "leiser Zug",
+			"Light breeze": "leichte Brise",
+			"Gentle breeze": "schwache Brise",
+			"Moderate breeze": "mäßige Brise",
+			"Fresh breeze": "frische Brise",
+			"Strong breeze": "starker Wind",
+			"High wind": "steifer Wind",
+			"Gale": "stürmischer Wind",
+			"Strong gale": "Sturm",
+			"Storm": "schwerer Sturm",
+			"Hurricane force": "orkanartiger Sturm",
+			"Violent storm": "Orkan",
+
+			"Update weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
+			"Minutes": "Minuten",
+
+			"Update weatherdata": "Aktualisiere Wetterdaten",
+
+			"Instance getting created": "Instanz wird erstellt",
+			"Instance is active": "Instanz ist aktiv",
+			"Instance is deleted": "Instanz wird gelöscht",
+			"Instance is inactive": "Instanz ist inaktiv",
+			"Instance is not created": "Instanz wurde nicht erzeugt",
+
+			"Instance is inactive (invalid configuration)": "Instanz ist inaktiv (ungültige Konfiguration)",
+			"Instance is inactive (server error)": "Instanz ist inaktiv (Serverfehler)",
+			"Instance is inactive (http error)": "Instanz ist inaktiv (HTTP-Fehler)",
+			"Instance is inactive (invalid data)": "Instanz ist inaktiv (ungültige Daten)"
+		}
+	}
+}

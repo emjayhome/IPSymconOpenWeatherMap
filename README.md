@@ -22,6 +22,9 @@ _OpenWeatherMap_ (https://openweathermap.org) ist eine Web-Seite, die Wetterdate
 
 Das Modul behandelt nur die kostenlosen Zugriffe.
 
+_OpenWeatherMap_:
+- Daten aus [OneCall-API](https://openweathermap.org/api/one-call-api)
+
 _OpenWeatherData_:
 - aktuellen Daten (_Current weather data_)
 - stündlichen Vorhersagen (_5 day / 3 hour forecast_)
@@ -52,15 +55,15 @@ Man muss hier (_https://home.openweathermap.org/users/sign_up_) einen Account er
 
 ### Einrichtung in IPS
 
-siehe [OpenWeatherData](OpenWeatherData/README.md#3-installation) und [OpenWeatherStation](OpenWeatherStation/README.md#3-installation)
+siehe [OpenWeatherMap](OpenWeatherMap/README.md#3-installation), [OpenWeatherData](OpenWeatherData/README.md#3-installation) und [OpenWeatherStation](OpenWeatherStation/README.md#3-installation)
 
 ## 4. Funktionsreferenz
 
-siehe [OpenWeatherData](OpenWeatherData/README.md#4-funktionsreferenz) und [OpenWeatherStation](OpenWeatherStation/README.md#4-funktionsreferenz)
+siehe [OpenWeatherMap](OpenWeatherMap/README.md#3-funktionsreferenz), [OpenWeatherData](OpenWeatherData/README.md#4-funktionsreferenz) und [OpenWeatherStation](OpenWeatherStation/README.md#4-funktionsreferenz)
 
 ## 5. Konfiguration
 
-siehe [OpenWeatherData](OpenWeatherData/README.md#5-konfiguration) und [OpenWeatherStation](OpenWeatherStation/README.md#5-konfiguration)
+siehe [OpenWeatherMap](OpenWeatherMap/README.md#3-konfiguration), [OpenWeatherData](OpenWeatherData/README.md#5-konfiguration) und [OpenWeatherStation](OpenWeatherStation/README.md#5-konfiguration)
 
 ## 6. Anhang
 
@@ -68,6 +71,7 @@ GUIDs
 
 - Modul: `{BCAEF996-FC2B-420D-A801-5C0B4A021225}`
 - Instanzen:
+  - OpenWeatherMap: `{99C682F3-C735-9EBD-5F74-B1F19518228B}`
   - OpenWeatherData: `{8072158E-53BF-482A-B925-F4FBE522CEF2}`
   - OpenWeatherStation: `{604AD7FF-7883-47E7-A2A8-0C6D3C343BE9}`
 
@@ -76,6 +80,9 @@ Verweise:
 
 
 ## 7. Versions-Historie
+
+- 2.0 @ 05.09.2021 12:33 (beta)
+  - neues Modul OpenWeatherMap für die OneCall-API
 
 - 1.25 @ 26.08.2021 18:37
   - Überarbeitung der Darstellung der Wetter-Zusammenfassung
