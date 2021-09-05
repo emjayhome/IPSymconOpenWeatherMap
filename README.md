@@ -55,15 +55,15 @@ Man muss hier (_https://home.openweathermap.org/users/sign_up_) einen Account er
 
 ### Einrichtung in IPS
 
-siehe [OpenWeatherMap](OpenWeatherMap/README.md#3-installation), [OpenWeatherData](OpenWeatherData/README.md#3-installation) und [OpenWeatherStation](OpenWeatherStation/README.md#3-installation)
+siehe [OpenWeatherMap](OpenWeatherOneCall/README.md#3-installation), [OpenWeatherData](OpenWeatherData/README.md#3-installation) und [OpenWeatherStation](OpenWeatherStation/README.md#3-installation)
 
 ## 4. Funktionsreferenz
 
-siehe [OpenWeatherMap](OpenWeatherMap/README.md#3-funktionsreferenz), [OpenWeatherData](OpenWeatherData/README.md#4-funktionsreferenz) und [OpenWeatherStation](OpenWeatherStation/README.md#4-funktionsreferenz)
+siehe [OpenWeatherMap](OpenWeatherOneCall/README.md#3-funktionsreferenz), [OpenWeatherData](OpenWeatherData/README.md#4-funktionsreferenz) und [OpenWeatherStation](OpenWeatherStation/README.md#4-funktionsreferenz)
 
 ## 5. Konfiguration
 
-siehe [OpenWeatherMap](OpenWeatherMap/README.md#3-konfiguration), [OpenWeatherData](OpenWeatherData/README.md#5-konfiguration) und [OpenWeatherStation](OpenWeatherStation/README.md#5-konfiguration)
+siehe [OpenWeatherMap](OpenWeatherOneCall/README.md#3-konfiguration), [OpenWeatherData](OpenWeatherData/README.md#5-konfiguration) und [OpenWeatherStation](OpenWeatherStation/README.md#5-konfiguration)
 
 ## 6. Anhang
 
@@ -71,7 +71,7 @@ GUIDs
 
 - Modul: `{BCAEF996-FC2B-420D-A801-5C0B4A021225}`
 - Instanzen:
-  - OpenWeatherMap: `{99C682F3-C735-9EBD-5F74-B1F19518228B}`
+  - OpenWeatherOneCall: `{99C682F3-C735-9EBD-5F74-B1F19518228B}`
   - OpenWeatherData: `{8072158E-53BF-482A-B925-F4FBE522CEF2}`
   - OpenWeatherStation: `{604AD7FF-7883-47E7-A2A8-0C6D3C343BE9}`
 
@@ -82,7 +82,7 @@ Verweise:
 ## 7. Versions-Historie
 
 - 2.0 @ 05.09.2021 12:33 (beta)
-  - neues Modul OpenWeatherMap für die OneCall-API
+  - neues Modul OpenWeatherOneCall für die OneCall-API
 
 - 1.25 @ 26.08.2021 18:37
   - Überarbeitung der Darstellung der Wetter-Zusammenfassung

@@ -1,6 +1,6 @@
 {
 	"id": "{99C682F3-C735-9EBD-5F74-B1F19518228B}",
-	"name": "OpenWeatherMap",
+	"name": "OpenWeatherOneCall",
 	"type": 3,
 	"vendor": "",
 	"aliases": [
@@ -9,6 +9,6 @@
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
-	"prefix": "OpenWeatherMap",
+	"prefix": "OpenWeatherOneCall",
 	"url": "https://github.com/demel42/IPSymconOpenWeatherMap/blob/master/README.md"
 }

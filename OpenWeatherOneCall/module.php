@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
-class OpenWeatherMap extends IPSModule
+class OpenWeatherOneCall extends IPSModule
 {
     use OpenWeatherMapCommonLib;
     use OpenWeatherMapLocalLib;
@@ -70,7 +70,7 @@ class OpenWeatherMap extends IPSModule
         $this->CreateVarProfile('OpenWeatherMap.Snowfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Snow');
         $this->CreateVarProfile('OpenWeatherMap.Cloudiness', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Cloud');
 
-        $this->RegisterTimer('UpdateData', 0, 'OpenWeatherMap_UpdateData(' . $this->InstanceID . ');');
+        $this->RegisterTimer('UpdateData', 0, 'OpenWeatherOneCall_UpdateData(' . $this->InstanceID . ');');
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
@@ -464,7 +464,7 @@ class OpenWeatherMap extends IPSModule
         $formActions[] = [
             'type'    => 'Button',
             'caption' => 'Update weatherdata',
-            'onClick' => 'OpenWeatherMap_UpdateData($id);'
+            'onClick' => 'OpenWeatherOneCall_UpdateData($id);'
         ];
 
         return $formActions;
