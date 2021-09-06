@@ -67,7 +67,7 @@ class OpenWeatherOneCall extends IPSModule
         $associations[] = ['Wert' =>  6, 'Name' => '%.1f', 'Farbe' => 0xFF8040];
         $associations[] = ['Wert' =>  8, 'Name' => '%.1f', 'Farbe' => 0xFF0000];
         $associations[] = ['Wert' => 11, 'Name' => '%.1f', 'Farbe' => 0xFF00FF];
-        $this->CreateVarProfile('OpenWeatherMap.UVIndex', VARIABLETYPE_INTEGER, '', 0, 12, 0, 0, 'Sun', $associations);
+        $this->CreateVarProfile('OpenWeatherMap.UVIndex', VARIABLETYPE_FLOAT, '', 0, 12, 0, 0, 'Sun', $associations);
 
         $this->CreateVarProfile('OpenWeatherMap.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 1, 'WindSpeed');
         $this->CreateVarProfile('OpenWeatherMap.WindStrength', VARIABLETYPE_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed');
@@ -121,7 +121,7 @@ class OpenWeatherOneCall extends IPSModule
         $this->MaintainVariable('Dewpoint', $this->Translate('Dewpoint'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Dewpoint', $vpos++, $with_dewpoint);
         $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Heatindex', $vpos++, $with_heatindex);
         $this->MaintainVariable('Windchill', $this->Translate('Windchill'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Temperatur', $vpos++, $with_windchill);
-        $this->MaintainVariable('UVIndex', $this->Translate('UV-Index'), VARIABLETYPE_INTEGER, 'OpenWeatherMap.UVIndex', $vpos++, $with_uv_index);
+        $this->MaintainVariable('UVIndex', $this->Translate('UV-Index'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.UVIndex', $vpos++, $with_uv_index);
         $this->MaintainVariable('Pressure', $this->Translate('Air pressure'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Pressure', $vpos++, true);
         $this->MaintainVariable('AbsolutePressure', $this->Translate('absolute pressure'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Pressure', $vpos++, $with_absolute_pressure);
         $this->MaintainVariable('WindSpeed', $this->Translate('Windspeed'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.WindSpeed', $vpos++, true);
@@ -157,7 +157,7 @@ class OpenWeatherOneCall extends IPSModule
 
             $this->MaintainVariable($pre . 'Begin' . $post, $this->Translate('Begin of hourly forecast-period') . $s, VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, $use);
             $this->MaintainVariable($pre . 'Temperature' . $post, $this->Translate('Temperature') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Temperatur', $vpos++, $use);
-            $this->MaintainVariable($pre . 'UVIndex' . $post, $this->Translate('UV-Index') . $s, VARIABLETYPE_INTEGER, 'OpenWeatherMap.UVIndex', $vpos++, $use);
+            $this->MaintainVariable($pre . 'UVIndex' . $post, $this->Translate('UV-Index') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.UVIndex', $vpos++, $use);
             $this->MaintainVariable($pre . 'Humidity' . $post, $this->Translate('Humidity') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Humidity', $vpos++, $use);
             $this->MaintainVariable($pre . 'Pressure' . $post, $this->Translate('Air pressure') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Pressure', $vpos++, $use);
             $this->MaintainVariable($pre . 'AbsolutePressure' . $post, $this->Translate('absolute pressure') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Pressure', $vpos++, $use && $with_absolute_pressure);
@@ -188,7 +188,7 @@ class OpenWeatherOneCall extends IPSModule
             $this->MaintainVariable($pre . 'TemperatureNight' . $post, $this->Translate('Night temperature') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Temperatur', $vpos++, $use);
             $this->MaintainVariable($pre . 'TemperatureMin' . $post, $this->Translate('minimum temperature') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Temperatur', $vpos++, $use);
             $this->MaintainVariable($pre . 'TemperatureMax' . $post, $this->Translate('maximum temperature') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Temperatur', $vpos++, $use);
-            $this->MaintainVariable($pre . 'UVIndex' . $post, $this->Translate('UV-Index') . $s, VARIABLETYPE_INTEGER, 'OpenWeatherMap.UVIndex', $vpos++, $use);
+            $this->MaintainVariable($pre . 'UVIndex' . $post, $this->Translate('UV-Index') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.UVIndex', $vpos++, $use);
             $this->MaintainVariable($pre . 'Humidity' . $post, $this->Translate('Humidity') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Humidity', $vpos++, $use);
             $this->MaintainVariable($pre . 'Pressure' . $post, $this->Translate('Air pressure') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Pressure', $vpos++, $use);
             $this->MaintainVariable($pre . 'AbsolutePressure' . $post, $this->Translate('absolute pressure') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Pressure', $vpos++, $use && $with_absolute_pressure);
@@ -605,7 +605,7 @@ class OpenWeatherOneCall extends IPSModule
 
         if ($with_uv_index) {
             $uvi = $this->GetArrayElem($jdata, 'current.uvi', 0);
-            $this->SetValue('UVIndex', (int) $uvi);
+            $this->SetValue('UVIndex', (float) $uvi);
         }
 
         $this->SetValue('WindSpeed', $wind_speed);
@@ -709,7 +709,7 @@ class OpenWeatherOneCall extends IPSModule
                 $this->SetValue($pre . 'AbsolutePressure' . $post, $abs_pressure);
             }
 
-            $this->SetValue($pre . 'UVIndex' . $post, $uvi);
+            $this->SetValue($pre . 'UVIndex' . $post, (float) $uvi);
 
             $this->SetValue($pre . 'Humidity' . $post, $humidity);
 
@@ -764,7 +764,7 @@ class OpenWeatherOneCall extends IPSModule
             $timestamp = $this->GetArrayElem($ent, 'dt', 0);
             $temperature_morning = $this->GetArrayElem($ent, 'temp.morn', 0);
             $temperature_day = $this->GetArrayElem($ent, 'temp.day', 0);
-            $temperature_evening = $this->GetArrayElem($ent, 'temp.evening', 0);
+            $temperature_evening = $this->GetArrayElem($ent, 'temp.eve', 0);
             $temperature_night = $this->GetArrayElem($ent, 'temp.night', 0);
             $temperature_min = $this->GetArrayElem($ent, 'temp.min', 0);
             $temperature_max = $this->GetArrayElem($ent, 'temp.max', 0);
@@ -812,7 +812,7 @@ class OpenWeatherOneCall extends IPSModule
                 $this->SetValue($pre . 'AbsolutePressure' . $post, $abs_pressure);
             }
 
-            $this->SetValue($pre . 'UVIndex' . $post, $uvi);
+            $this->SetValue($pre . 'UVIndex' . $post, (float) $uvi);
 
             $this->SetValue($pre . 'Humidity' . $post, $humidity);
 
