@@ -659,6 +659,9 @@ class OpenWeatherOneCall extends IPSModule
 
             $timestamp = $this->GetArrayElem($ent, 'dt', 0);
             $precipitation = $this->GetArrayElem($ent, 'precipitation', 0);
+
+            $this->SetValue($pre . 'Begin' . $post, $timestamp);
+            $this->SetValue($pre . 'RainProbability' . $post, $precipitation);
         }
 
         $hourly_forecast_count = $this->ReadPropertyInteger('hourly_forecast_count');
@@ -683,8 +686,7 @@ class OpenWeatherOneCall extends IPSModule
 
             $pop = $this->GetArrayElem($ent, 'pop', 0);
 
-            $clouds = $this->GetArrayElem($ent, 'clouds.all', 0);
-            $conditions = $this->GetArrayElem($ent, 'weather.0.description', '');
+            $clouds = $this->GetArrayElem($ent, 'clouds', 0);
 
             $conditions = '';
             $weather = $this->GetArrayElem($ent, 'weather', '');
@@ -781,8 +783,7 @@ class OpenWeatherOneCall extends IPSModule
 
             $pop = $this->GetArrayElem($ent, 'pop', 0);
 
-            $clouds = $this->GetArrayElem($ent, 'clouds.all', 0);
-            $conditions = $this->GetArrayElem($ent, 'weather.0.description', '');
+            $clouds = $this->GetArrayElem($ent, 'clouds', 0);
 
             $conditions = '';
             $weather = $this->GetArrayElem($ent, 'weather', '');
