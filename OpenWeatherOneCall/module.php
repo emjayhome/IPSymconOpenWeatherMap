@@ -617,7 +617,7 @@ class OpenWeatherOneCall extends IPSModule
             $this->SetValue('WindStrength', $windstrength);
         }
         if ($with_windstrength2text) {
-            $bft = $this->ConvertWindSpeed2Strength($wind_speed);
+            $bft = $this->ConvertWindSpeed2Strength((int) $wind_speed);
             $windstrength = $this->ConvertWindStrength2Text($bft);
             $this->SetValue('WindStrengthText', $windstrength);
         }
@@ -722,7 +722,7 @@ class OpenWeatherOneCall extends IPSModule
                 $this->SetValue($pre . 'WindStrength' . $post, $windstrength);
             }
             if ($with_windstrength2text) {
-                $bft = $this->ConvertWindSpeed2Strength($wind_speed);
+                $bft = $this->ConvertWindSpeed2Strength((int) $wind_speed);
                 $windstrength = $this->ConvertWindStrength2Text($bft);
                 $this->SetValue($pre . 'WindStrengthText' . $post, $windstrength);
             }
@@ -825,7 +825,7 @@ class OpenWeatherOneCall extends IPSModule
                 $this->SetValue($pre . 'WindStrength' . $post, $windstrength);
             }
             if ($with_windstrength2text) {
-                $bft = $this->ConvertWindSpeed2Strength($wind_speed);
+                $bft = $this->ConvertWindSpeed2Strength((int) $wind_speed);
                 $windstrength = $this->ConvertWindStrength2Text($bft);
                 $this->SetValue($pre . 'WindStrengthText' . $post, $windstrength);
             }
