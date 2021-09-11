@@ -81,7 +81,7 @@ Verweise:
 
 ## 7. Versions-Historie
 
-- 2.0 @ 06.09.2021 22:08 (beta)
+- 2.0 @ 11.09.2021 12:16
   - neues Modul OpenWeatherOneCall für die OneCall-API
 
 - 1.25 @ 26.08.2021 18:37
