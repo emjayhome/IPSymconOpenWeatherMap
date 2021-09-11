@@ -21,7 +21,7 @@ class OpenWeatherOneCall extends IPSModule
         $this->RegisterPropertyBoolean('module_disable', false);
 
         $this->RegisterPropertyString('appid', '');
-        $this->RegisterPropertyString('location', '');
+        $this->RegisterPropertyString('location', json_encode(['latitude' => 0, 'longitude' => 0]));
         $this->RegisterPropertyFloat('altitude', 0);
 
         $lang = '';
