@@ -30,58 +30,38 @@ In IP-Symcon nun _Instanz hinzufügen_ (_CTRL+1_) auswählen unter der Kategorie
 
 ## 4. Funktionsreferenz
 
-`OpenWeatherData_UpdateData(int $InstanzID)`
+`OpenWeatherOneCall_UpdateData(int $InstanzID)`
 
 ruft die Daten von _OpenWeatherMap_ ab. Wird automatisch zyklisch durch die Instanz durchgeführt im Abstand wie in der Konfiguration angegeben.
 
 ### Hilfsfunktionen
 
-`string OpenWeatherData_GetRawData(int $InstanzID, string $name)`
+`string OpenWeatherOneCalla_GetRawData(int $InstanzID)`
 
-liefert die Original-Ergebnisse der HTML-Aufrufe, z.B. zur Darstellung der HTML-Box. Folgende Daten stehen zur Verfügung:
-
-| Name              | Bedeutung               |
-| :---------------: | :---------------------: |
-| Current           | aktuelle Wetterdaten    |
-| HourlyForecast    | 3-stündliche Vorhersage |
+liefert die Original-Ergebnisse der HTML-Aufrufe, z.B. zur Darstellung der HTML-Box.
 
 
-`float OpenWeatherData_CalcAbsoluteHumidity(int $InstanzID, float $Temperatur, float $Humidity)`
+`float OpenWeatherOneCall_CalcAbsoluteHumidity(int $InstanzID, float $Temperatur, float $Humidity)`
 
 berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) die absolute Feuchte (in g/m³)
 
 
-`float OpenWeatherData_CalcAbsolutePressure(int $InstanzID, float $Pressure, $Temperatur, int $Altitude)`
+`float OpenWeatherOneCall_CalcAbsolutePressure(int $InstanzID, float $Pressure, $Temperatur, int $Altitude)`
 
 berechnet aus dem relativen Luftdruck (in mbar) und der Temperatur (in °C) und Höhe (in m) den absoluten Luftdruck (in mbar)
 
 
-`float OpenWeatherData_CalcDewpoint(int $InstanzID, float $Temperatur, float $Humidity)`
-
-berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Taupunkt (in °C)
-
-
-`float OpenWeatherData_CalcHeatindex(int $InstanzID, float $Temperatur, float $Humidity)`
-
-berechnet aus der Temperatur (in °C) und der relativen Luftfeuchtigkeit (in %) den Hitzeindex (in °C)
-
-
-`float OpenWeatherData_CalcWindchill(int $InstanzID, float $Temperatur, float $WindSpeed)`
-
-berechnet aus der Temperatur (in °C) und der Windgeschwindigkeit (in km/h) den Windchill (Windkühle) (in °C)
-
-
-`string OpenWeatherData_ConvertWindDirection2Text(int $InstanzID, int $WindDirection)`
+`string OpenWeatherOneCall_ConvertWindDirection2Text(int $InstanzID, int $WindDirection)`
 
 ermittelt aus der Windrichtung (in °) die korrespondierende Bezeichnung auf der Windrose
 
 
-`int OpenWeatherData_ConvertWindSpeed2Strength(int $InstanzID, float $WindSpeed)`
+`int OpenWeatherOneCall_ConvertWindSpeed2Strength(int $InstanzID, float $WindSpeed)`
 
 berechnet aus der Windgeschwindigkeit (in km/h) die Windstärke (in bft)
 
 
-`string OpenWeatherData_ConvertWindStrength2Text(int $InstanzID, int $WindStrength)`
+`string OpenWeatherOneCall_ConvertWindStrength2Text(int $InstanzID, int $WindStrength)`
 
 ermittelt aus der Windstärke (in bft) die korrespondierende Bezeichnung gemäß Beaufortskala
 
@@ -92,34 +72,33 @@ ermittelt aus der Windstärke (in bft) die korrespondierende Bezeichnung gemäß
 
 | Eigenschaft               | Typ     | Standardwert | Beschreibung                               |
 | :-----------------------: | :-----: | :----------: | :----------------------------------------: |
-| appid                     | string  |              | API-Schlüssel von _OpenWeatherMap_         |
-|                           |         |              |                                            |
-| latitude                  | float   |              | Breitengrad der Station                    |
-| longitude                 | float   |              | Längengrad der Station                     |
+| appid                     | string  |              | API-Schlüssel von _OpenWeatherMap_ |
+|                           |         |              | |
+| location                  | string  | 0, 0         | GPS-Position der Station |
 | altitude                  | float   |              | Höhe der Station über dem Meeresspiegel in Metern |
-|                           |         |              |                                            |
-| lang                      | string  |              | Spracheinstellungen für textuelle Angaben  |
-|                           |         |              |                                            |
-| with_absolute_humidity    | boolean | false        | absolute Luftfeuchtigkeit                  |
-| with_absolute_pressure    | boolean | false        | absoluter Luftdruck                        |
-| with_dewpoint             | boolean | false        | Taupunkt                                   |
-| with_heatindex            | boolean | false        | Hitzeindex                                 |
-| with_windchill            | boolean | false        | Windchill (Windkühle)                      |
-| with_windstrength         | boolean | false        | Windstärke                                 |
-| with_windstrength2text    | boolean | false        | Windstärke                                 |
-| with_windangle            | boolean | true         | Windrichtung in Grad                       |
-| with_rain_probability     | boolean | false        | Regenwahrscheinlichkeit                    |
-| with_cloudiness           | boolean | false        | Bewölkung                                  |
-| with_conditions           | boolean | false        | Wetterbedingungen                          |
-| with_icons                | boolean | false        | Wetterbedingung-Symbole                    |
-| with_condition_ids        | boolean | false        | Wetterbedingung-Ids                        |
-|                           |         |              |                                            |
-| with_summary              | boolean | false        | HTML-Box mit einer Zusammenfassung         |
-| summary_script            | integer | 0            | ID eines Scriptes zur alternative Erstellung der HTML-Box |
-|                           |         |              |                                            |
-| hourly_forecast_count     | integer | 0            | Anzahl der Vorhersagen (max. 5 Tage alle 3 Stunden) |
-|                           |         |              |                                            |
-| update_interval           | integer | 60           | Aktualisierungsintervall in Minuten        |
+|                           |         |              | |
+| lang                      | string  |              | Spracheinstellungen für textuelle Angaben |
+|                           |         |              | |
+| with_absolute_humidity    | boolean | false        | absolute Luftfeuchtigkeit |
+| with_absolute_pressure    | boolean | false        | absoluter Luftdruck |
+| with_dewpoint             | boolean | false        | Taupunkt |
+| with_heatindex            | boolean | false        | Hitzeindex |
+| with_windchill            | boolean | false        | Windchill (Windkühle) |
+| with_uv_indexl            | boolean | false        | UV-Index |
+| with_windstrength         | boolean | false        | Windstärke |
+| with_windstrength2text    | boolean | false        | Windstärke |
+| with_windangle            | boolean | true         | Windrichtung in Grad |
+| with_rain_probability     | boolean | false        | Regenwahrscheinlichkeit |
+| with_cloudiness           | boolean | false        | Bewölkung |
+| with_conditions           | boolean | false        | Wetterbedingungen |
+| with_icons                | boolean | false        | Wetterbedingung-Symbole |
+| with_condition_id         | boolean | false        | Wetterbedingung-Id |
+|                           |         |              | |
+| minutely_forecast_count   | integer | 0            | Anzahl der minütlichen Vorhersage |
+| hourly_forecast_count     | integer | 0            | Anzahl der stündlichen Vorhersage |
+| daily_forecast_count      | integer | 0            | Anzahl der täglichen Vorhersage |
+|                           |         |              | |
+| update_interval           | integer | 60           | Aktualisierungsintervall in Minuten |
 
 Wenn _longitude_ und _latitude_ auf **0** stehen, werden die Daten aus der ersten gefundenen Instanz des Moduls _Location Control_ verwendet.
 Die, Angabe von _altitude_ ist nur erforderlich zur Berechnung des absoluten Luftdrucks.
@@ -127,31 +106,6 @@ Die, Angabe von _altitude_ ist nur erforderlich zur Berechnung des absoluten Luf
 Die unterstützten Spracheinstellung finden sich in der API-Dokumentatin unter der Überschrift _Multilingual support_ und sind z.B. (_de_, _en_, _fr_ ...).
 
 Hinweis zu _with_icon_ und _with_condition_id_: diese Attribute können in der Nachricht mehrfach vorkommen. Damit man aber damit gut umgehen kann, wird immer nur der wichtigste Eintrag übernommen; laut _OpenWeatherMap_ ist das jeweils der erste Eintrag.
-
-Hinweis zu _with_conditions_: diese werden alle, durch Komma getrennt, übernommen.
-
-Erläuterung zu _summary_script_:
-mit diesem Scripten kann man eine alternative Darstellung realisieren.
-
-Ein passendes Code-Fragment für ein Script:
-
-```
-$instID = $_IPS['InstanceID'];
-
-$html = '';
-
-$data = OpenWeatherData_GetData($instID, 'Current');
-if ($data) {
-	$jdata = json_decode($data, true);
-
-	$temperature = $jdata['main']['temp'];
-
-	$html = 'Temperatur: ' . $temperatur . ' °C<br>';
-}
-
-echo $html;
-
-```
 
 #### Schaltflächen
 
@@ -166,7 +120,7 @@ Es werden folgende Variablenprofile angelegt:
 OpenWeatherMap.WindStrength, OpenWeatherMap.WindAngle
 
 * Float<br>
-OpenWeatherMap.absHumidity, OpenWeatherMap.Cloudiness, OpenWeatherMap.Dewpoint, OpenWeatherMap.Heatindex, OpenWeatherMap.Humidity, OpenWeatherMap.Pressure, OpenWeatherMap.Rainfall, OpenWeatherMap.RainProbability, OpenWeatherMap.Snowfall, OpenWeatherMap.Temperatur, OpenWeatherMap.WindSpeed
+OpenWeatherMap.absHumidity, OpenWeatherMap.Cloudiness, OpenWeatherMap.Dewpoint, OpenWeatherMap.Heatindex, OpenWeatherMap.Humidity, OpenWeatherMap.Pressure, OpenWeatherMap.Rainfall, OpenWeatherMap.RainProbability, OpenWeatherMap.Snowfall, OpenWeatherMap.Temperatur, OpenWeatherMap.UVIndex, OpenWeatherMap.WindSpeed
 
 * String<br>
 OpenWeatherMap.WindDirection
