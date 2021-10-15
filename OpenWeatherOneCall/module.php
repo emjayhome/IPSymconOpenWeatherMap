@@ -199,6 +199,7 @@ class OpenWeatherOneCall extends IPSModule
             $this->MaintainVariable($pre . 'WindDirection' . $post, $this->Translate('Winddirection') . $s, VARIABLETYPE_STRING, 'OpenWeatherMap.WindDirection', $vpos++, $use && $with_winddirection);
             $this->MaintainVariable($pre . 'WindGust' . $post, $this->Translate('Windgust') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.WindSpeed', $vpos++, $use);
             $this->MaintainVariable($pre . 'RainProbability' . $post, $this->Translate('Rain propability') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.RainProbability', $vpos++, $use && $with_rain_probability);
+            $this->MaintainVariable($pre . 'Rain' . $post, $this->Translate('Rainfall') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Rainfall', $vpos++, $use);
             $this->MaintainVariable($pre . 'Cloudiness' . $post, $this->Translate('Cloudiness') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Cloudiness', $vpos++, $use && $with_cloudiness);
             $this->MaintainVariable($pre . 'Conditions' . $post, $this->Translate('Conditions') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_conditions);
             $this->MaintainVariable($pre . 'ConditionIcon' . $post, $this->Translate('Condition-icon') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_icon);
@@ -782,6 +783,7 @@ class OpenWeatherOneCall extends IPSModule
             $wind_gust = $this->GetArrayElem($ent, 'wind_gust', 0);
 
             $pop = $this->GetArrayElem($ent, 'pop', 0);
+            $rain = $this->GetArrayElem($ent, 'rain', 0);
 
             $clouds = $this->GetArrayElem($ent, 'clouds', 0);
 
@@ -839,6 +841,7 @@ class OpenWeatherOneCall extends IPSModule
             if ($with_rain_probability) {
                 $this->SetValue($pre . 'RainProbability' . $post, (float) $pop * 100);
             }
+            $this->SetValue($pre . 'Rain' . $post, (float) $rain);
 
             if ($with_cloudiness) {
                 $this->SetValue($pre . 'Cloudiness' . $post, $clouds);
