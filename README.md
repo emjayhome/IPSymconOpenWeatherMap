@@ -81,6 +81,11 @@ Verweise:
 
 ## 7. Versions-Historie
 
+- 2.1 @ 15.10.2021 11:41 (beta)
+  - OpenWeatherOneCall:
+    - tägliche Vorhersage + Regenmenge
+	- Muster-Script für die Erstellung einer HTML-Box
+
 - 2.0 @ 11.09.2021 12:16
   - neues Modul OpenWeatherOneCall für die OneCall-API
 
