@@ -167,6 +167,8 @@ class OpenWeatherOneCall extends IPSModule
             $this->MaintainVariable($pre . 'WindAngle' . $post, $this->Translate('Winddirection') . $s, VARIABLETYPE_INTEGER, 'OpenWeatherMap.WindAngle', $vpos++, $use && $with_windangle);
             $this->MaintainVariable($pre . 'WindDirection' . $post, $this->Translate('Winddirection') . $s, VARIABLETYPE_STRING, 'OpenWeatherMap.WindDirection', $vpos++, $use && $with_winddirection);
             $this->MaintainVariable($pre . 'WindGust' . $post, $this->Translate('Windgust') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.WindSpeed', $vpos++, $use);
+            $this->MaintainVariable($pre . 'Rain_1h' . $post, $this->Translate('Rainfall of last hour') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Rainfall', $vpos++, $use);
+            $this->MaintainVariable($pre . 'Snow_1h' . $post, $this->Translate('Snowfall of last hour') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Snowfall', $vpos++, $use);
             $this->MaintainVariable($pre . 'RainProbability' . $post, $this->Translate('Rain propability') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.RainProbability', $vpos++, $use && $with_rain_probability);
             $this->MaintainVariable($pre . 'Cloudiness' . $post, $this->Translate('Cloudiness') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Cloudiness', $vpos++, $use && $with_cloudiness);
             $this->MaintainVariable($pre . 'Conditions' . $post, $this->Translate('Conditions') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_conditions);
@@ -685,6 +687,9 @@ class OpenWeatherOneCall extends IPSModule
             $wind_deg = $this->GetArrayElem($ent, 'wind_deg', 0);
             $wind_gust = $this->GetArrayElem($ent, 'wind_gust', 0);
 
+            $rain_1h = $this->GetArrayElem($ent, 'rain.1h', 0);
+            $snow_1h = $this->GetArrayElem($ent, 'snow.1h', 0);
+
             $pop = $this->GetArrayElem($ent, 'pop', 0);
 
             $clouds = $this->GetArrayElem($ent, 'clouds', 0);
@@ -734,6 +739,9 @@ class OpenWeatherOneCall extends IPSModule
                 $this->SetValue($pre . 'WindDirection' . $post, $dir);
             }
             $this->SetValue($pre . 'WindGust' . $post, $wind_gust);
+
+            $this->SetValue($pre . 'Rain_1h' . $post, $rain_1h);
+            $this->SetValue($pre . 'Snow_1h' . $post, $snow_1h);
 
             if ($with_rain_probability) {
                 $this->SetValue($pre . 'RainProbability' . $post, (float) $pop * 100);
