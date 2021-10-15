@@ -83,8 +83,9 @@ Verweise:
 
 - 2.1 @ 15.10.2021 12:17 (beta)
   - OpenWeatherOneCall ergänzt:
-    - tägliche Vorhersage + Regenmenge
+    - Korrektur für "letzte Messung"
     - stündliche Vorhersage + Regenmenge / Schneefall
+    - tägliche Vorhersage + Regenmenge
 	- Muster-Script für die Erstellung einer HTML-Box mit Übersicht und für Wetterbedingung-Icon
 
 - 2.0 @ 11.09.2021 12:16
