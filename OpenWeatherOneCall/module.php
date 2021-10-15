@@ -660,10 +660,10 @@ class OpenWeatherOneCall extends IPSModule
             $ent = $this->GetArrayElem($jdata, 'minutely.' . $i, '');
             $this->SendDebug(__FUNCTION__, 'minutely[' . $i . ']=' . print_r($ent, true), 0);
 
-            $timestamp = $this->GetArrayElem($ent, 'dt', 0);
+            $begin_ts = $this->GetArrayElem($ent, 'dt', 0);
             $precipitation = $this->GetArrayElem($ent, 'precipitation', 0);
 
-            $this->SetValue($pre . 'Begin' . $post, $timestamp);
+            $this->SetValue($pre . 'Begin' . $post, $begin_ts);
             $this->SetValue($pre . 'RainProbability' . $post, $precipitation);
         }
 
@@ -675,7 +675,7 @@ class OpenWeatherOneCall extends IPSModule
             $ent = $this->GetArrayElem($jdata, 'hourly.' . $i, '');
             $this->SendDebug(__FUNCTION__, 'hourly[' . $i . ']=' . print_r($ent, true), 0);
 
-            $timestamp = $this->GetArrayElem($ent, 'dt', 0);
+            $begin_ts = $this->GetArrayElem($ent, 'dt', 0);
             $temperature = $this->GetArrayElem($ent, 'temp', 0);
             $uvi = $this->GetArrayElem($ent, 'uvi', 0);
             $pressure = $this->GetArrayElem($ent, 'pressure', 0);
@@ -707,7 +707,7 @@ class OpenWeatherOneCall extends IPSModule
                 $id = $this->GetArrayElem($weather, '0.id', '');
             }
 
-            $this->SetValue($pre . 'Begin' . $post, $timestamp);
+            $this->SetValue($pre . 'Begin' . $post, $begin_ts);
 
             $this->SetValue($pre . 'Temperature' . $post, $temperature);
 
@@ -772,7 +772,7 @@ class OpenWeatherOneCall extends IPSModule
             $ent = $this->GetArrayElem($jdata, 'daily.' . $i, '');
             $this->SendDebug(__FUNCTION__, 'daily[' . $i . ']=' . print_r($ent, true), 0);
 
-            $timestamp = $this->GetArrayElem($ent, 'dt', 0);
+            $begin_ts = $this->GetArrayElem($ent, 'dt', 0);
             $temperature_morning = $this->GetArrayElem($ent, 'temp.morn', 0);
             $temperature_day = $this->GetArrayElem($ent, 'temp.day', 0);
             $temperature_evening = $this->GetArrayElem($ent, 'temp.eve', 0);
@@ -808,7 +808,7 @@ class OpenWeatherOneCall extends IPSModule
                 $id = $this->GetArrayElem($weather, '0.id', '');
             }
 
-            $this->SetValue($pre . 'Begin' . $post, $timestamp);
+            $this->SetValue($pre . 'Begin' . $post, $begin_ts);
 
             $this->SetValue($pre . 'TemperatureMorning' . $post, $temperature_morning);
             $this->SetValue($pre . 'TemperatureDay' . $post, $temperature_day);
