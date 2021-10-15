@@ -86,7 +86,7 @@ Verweise:
     - Korrektur für "letzte Messung"
     - stündliche Vorhersage + Regenmenge / Schneefall
     - tägliche Vorhersage + Regenmenge
-	- Muster-Script für die Erstellung einer HTML-Box mit Übersicht und für Wetterbedingung-Icon
+    - Muster-Script für die Erstellung einer HTML-Box mit Übersicht und für Wetterbedingung-Icon
 
 - 2.0 @ 11.09.2021 12:16
   - neues Modul OpenWeatherOneCall für die OneCall-API
