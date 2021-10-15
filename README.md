@@ -22,7 +22,7 @@ _OpenWeatherMap_ (https://openweathermap.org) ist eine Web-Seite, die Wetterdate
 
 Das Modul behandelt nur die kostenlosen Zugriffe.
 
-_OpenWeatherMap_:
+_OpenWeatherOneCall_:
 - Daten aus [OneCall-API](https://openweathermap.org/api/one-call-api)
 
 _OpenWeatherData_:
@@ -55,15 +55,15 @@ Man muss hier (_https://home.openweathermap.org/users/sign_up_) einen Account er
 
 ### Einrichtung in IPS
 
-siehe [OpenWeatherMap](OpenWeatherOneCall/README.md#3-installation), [OpenWeatherData](OpenWeatherData/README.md#3-installation) und [OpenWeatherStation](OpenWeatherStation/README.md#3-installation)
+siehe [OpenWeatherOneCall](OpenWeatherOneCall/README.md#3-installation), [OpenWeatherData](OpenWeatherData/README.md#3-installation) und [OpenWeatherStation](OpenWeatherStation/README.md#3-installation)
 
 ## 4. Funktionsreferenz
 
-siehe [OpenWeatherMap](OpenWeatherOneCall/README.md#3-funktionsreferenz), [OpenWeatherData](OpenWeatherData/README.md#4-funktionsreferenz) und [OpenWeatherStation](OpenWeatherStation/README.md#4-funktionsreferenz)
+siehe [OpenWeatherOneCall](OpenWeatherOneCall/README.md#3-funktionsreferenz), [OpenWeatherData](OpenWeatherData/README.md#4-funktionsreferenz) und [OpenWeatherStation](OpenWeatherStation/README.md#4-funktionsreferenz)
 
 ## 5. Konfiguration
 
-siehe [OpenWeatherMap](OpenWeatherOneCall/README.md#3-konfiguration), [OpenWeatherData](OpenWeatherData/README.md#5-konfiguration) und [OpenWeatherStation](OpenWeatherStation/README.md#5-konfiguration)
+siehe [OpenWeatherOneCall](OpenWeatherOneCall/README.md#3-konfiguration), [OpenWeatherData](OpenWeatherData/README.md#5-konfiguration) und [OpenWeatherStation](OpenWeatherStation/README.md#5-konfiguration)
 
 ## 6. Anhang
 
