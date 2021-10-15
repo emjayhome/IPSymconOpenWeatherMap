@@ -781,7 +781,7 @@ class OpenWeatherData extends IPSModule
         <table>
           <tr>
             <td>' . $this->Translate('Ø Wind') . '</td>
-            <td>' . $wind_speed . '&nbsp;km/h<td>
+            <td>' . $wind_speed . '&nbsp;km/h</td>
           </tr>
           <tr>
             <td>' . $this->Translate('Rain 3h') . '</td>
@@ -829,7 +829,7 @@ class OpenWeatherData extends IPSModule
         <table>
           <tr>
             <td>' . $this->Translate('Ø Wind') . '</td>
-            <td>' . $wind_speed . '&nbsp;km/h<td>
+            <td>' . $wind_speed . '&nbsp;km/h</td>
           </tr>
           <tr>
             <td>' . $this->Translate('Rain 3h') . '</td>
