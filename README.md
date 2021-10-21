@@ -81,7 +81,7 @@ Verweise:
 
 ## 7. Versions-Historie
 
-- 2.1 @ 15.10.2021 12:17 (beta)
+- 2.1 @ 15.10.2021 12:17
   - OpenWeatherOneCall ergänzt:
     - Korrektur für "letzte Messung"
     - stündliche Vorhersage + Regenmenge / Schneefall
