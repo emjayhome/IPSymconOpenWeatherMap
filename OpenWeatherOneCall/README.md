@@ -68,8 +68,8 @@ ermittelt aus der Windstärke (in bft) die korrespondierende Bezeichnung gemäß
 
 ### Ausgabe aufbereiten
 
-Für die Anzeige der Vorhersage kann man ein Script benutzen, ein Beispiel siehe [docs/oneCallStatus.php](docs/oneCallStatus.php);
-für die Darstellung eines Wetter-Icon siehe [docs/oneCallConditionIcon.php](docs/oneCallConditionIcon.php).
+Für die Anzeige der Vorhersage kann man ein Script benutzen, ein Beispiel siehe [docs/oneCallStatus.php](../docs/oneCallStatus.php);
+für die Darstellung eines Wetter-Icon siehe [docs/oneCallConditionIcon.php](../docs/oneCallConditionIcon.php).
 
 ## 5. Konfiguration
 
