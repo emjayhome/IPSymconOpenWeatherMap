@@ -9,6 +9,10 @@ trait OpenWeatherMapLocalLib
     public static $IS_HTTPERROR = IS_EBASE + 3;
     public static $IS_INVALIDDATA = IS_EBASE + 4;
 
+    public static $STATUS_INVALID = 0;
+    public static $STATUS_VALID = 1;
+    public static $STATUS_RETRYABLE = 2;
+
     private function GetFormStatus()
     {
         $formStatus = [];
@@ -24,5 +28,19 @@ trait OpenWeatherMapLocalLib
         $formStatus[] = ['code' => self::$IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
 
         return $formStatus;
+    }
+
+    private function CheckStatus()
+    {
+        switch ($this->GetStatus()) {
+            case IS_ACTIVE:
+                $class = self::$STATUS_VALID;
+                break;
+            default:
+                $class = self::$STATUS_INVALID;
+                break;
+        }
+
+        return $class;
     }
 }

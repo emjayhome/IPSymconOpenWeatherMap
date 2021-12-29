@@ -81,6 +81,10 @@ Verweise:
 
 ## 7. Versions-Historie
 
+- 2.2 @ 28.12.2021 13:35
+  - Anzeige der Modul/Bibliotheks-Informationen
+  - Absicherung von 'Modul deaktivieren'
+
 - 2.1 @ 15.10.2021 12:17
   - OpenWeatherOneCall ergänzt:
     - Korrektur für "letzte Messung"

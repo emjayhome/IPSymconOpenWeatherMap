@@ -110,22 +110,6 @@ class OpenWeatherStation extends IPSModule
         $this->SetStatus(IS_ACTIVE);
     }
 
-    public function GetConfigurationForm()
-    {
-        $formElements = $this->GetFormElements();
-        $formActions = $this->GetFormActions();
-        $formStatus = $this->GetFormStatus();
-
-        $form = json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
-        if ($form == '') {
-            $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg(), 0);
-            $this->SendDebug(__FUNCTION__, '=> formElements=' . print_r($formElements, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formActions=' . print_r($formActions, true), 0);
-            $this->SendDebug(__FUNCTION__, '=> formStatus=' . print_r($formStatus, true), 0);
-        }
-        return $form;
-    }
-
     private function GetFormElements()
     {
         $formElements = [];
@@ -289,6 +273,17 @@ class OpenWeatherStation extends IPSModule
             'onClick' => 'OpenWeatherStation_TransmitMeasurements($id);'
         ];
 
+        $formActions[] = [
+            'type'    => 'ExpansionPanel',
+            'caption' => 'Information',
+            'items'   => [
+                [
+                    'type'    => 'Label',
+                    'caption' => $this->InstanceInfo($this->InstanceID),
+                ],
+            ],
+        ];
+
         return $formActions;
     }
 
@@ -301,6 +296,11 @@ class OpenWeatherStation extends IPSModule
 
     public function TransmitMeasurements()
     {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
         $station_id = $this->ReadPropertyString('station_id');
         if ($station_id == '') {
             return false;
@@ -368,6 +368,11 @@ class OpenWeatherStation extends IPSModule
 
     public function FetchMeasurements(int $from, int $to, string $type = 'm', int $limit = 100)
     {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
         $station_id = $this->ReadPropertyString('station_id');
         if ($station_id == '') {
             return false;
@@ -400,6 +405,11 @@ class OpenWeatherStation extends IPSModule
 
     public function RegisterStation()
     {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
         $station_id = $this->ReadPropertyString('station_id');
         if ($station_id != '') {
             return false;
@@ -436,6 +446,11 @@ class OpenWeatherStation extends IPSModule
 
     public function UpdateStation()
     {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
         $station_id = $this->ReadPropertyString('station_id');
         if ($station_id == '') {
             return false;
@@ -468,6 +483,11 @@ class OpenWeatherStation extends IPSModule
 
     public function ListStations()
     {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
         $statuscode = $this->do_HttpRequest('data/3.0/stations', '', '', 'GET', $result);
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, 'http-request failed', 0);
@@ -478,6 +498,11 @@ class OpenWeatherStation extends IPSModule
 
     public function DeleteStation(string $station_id)
     {
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
+            return;
+        }
+
         $statuscode = $this->do_HttpRequest('data/3.0/stations/' . $station_id, '', '', 'DELETE', $result);
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, 'http-request failed', 0);
@@ -488,8 +513,8 @@ class OpenWeatherStation extends IPSModule
 
     private function do_HttpRequest($cmd, $args, $postdata, $mode, &$result)
     {
-        if ($this->GetStatus() == IS_INACTIVE) {
-            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+        if ($this->CheckStatus() == self::$STATUS_INVALID) {
+            $this->SendDebug(__FUNCTION__, $this->GetStatusText() . ' => skip', 0);
             return;
         }
 
