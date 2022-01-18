@@ -81,6 +81,9 @@ Verweise:
 
 ## 7. Versions-Historie
 
+- 2,3 @ 18.01.2022 08:00
+  - automatischer Retry nach HTTP-Server-Error
+
 - 2.2 @ 28.12.2021 13:35
   - Anzeige der Modul/Bibliotheks-Informationen
   - Absicherung von 'Modul deaktivieren'
