@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+require_once __DIR__ . '/../libs/CommonStubs/common.php'; // globale Funktionen
 require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
 class OpenWeatherStation extends IPSModule
 {
-    use OpenWeatherMapCommonLib;
+    use StubsCommonLib;
     use OpenWeatherMapLocalLib;
 
     public function Create()
@@ -56,6 +56,27 @@ class OpenWeatherStation extends IPSModule
         }
     }
 
+    private function CheckConfiguration()
+    {
+        $s = '';
+        $r = [];
+
+        $appid = $this->ReadPropertyString('appid');
+        if ($appid == '') {
+            $this->SendDebug(__FUNCTION__, '"appid" is needed', 0);
+            $r[] = $this->Translate('API-Key must be specified');
+        }
+
+        if ($r != []) {
+            $s = $this->Translate('The following points of the configuration are incorrect') . ':' . PHP_EOL;
+            foreach ($r as $p) {
+                $s .= '- ' . $p . PHP_EOL;
+            }
+        }
+
+        return $s;
+    }
+
     public function ApplyChanges()
     {
         parent::ApplyChanges();
@@ -70,8 +91,8 @@ class OpenWeatherStation extends IPSModule
             return;
         }
 
-        $appid = $this->ReadPropertyString('appid');
-        if ($appid == '') {
+        if ($this->CheckConfiguration() != false) {
+            $this->SetTimerInterval('TransmitMeasurements', 0);
             $this->SetStatus(self::$IS_INVALIDCONFIG);
             return;
         }
@@ -98,7 +119,7 @@ class OpenWeatherStation extends IPSModule
         ];
         foreach ($propertyNames as $name) {
             $oid = $this->ReadPropertyInteger($name);
-            if ($oid > 0) {
+            if ($oid >= 10000) {
                 $this->RegisterReference($oid);
             }
         }
@@ -115,14 +136,27 @@ class OpenWeatherStation extends IPSModule
         $formElements = [];
 
         $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'OpenWeatherMap - Transmission of measurement values of own weather station'
+        ];
+
+        @$s = $this->CheckConfiguration();
+        if ($s != '') {
+            $formElements[] = [
+                'type'    => 'Label',
+                'caption' => $s
+            ];
+            $formElements[] = [
+                'type'    => 'Label',
+            ];
+        }
+
+        $formElements[] = [
             'type'    => 'CheckBox',
             'name'    => 'module_disable',
             'caption' => 'Disable instance'
         ];
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'OpenWeatherMap - Transmission of measurement values of own weather station'
-        ];
+
         $formElements[] = [
             'type'    => 'ValidationTextBox',
             'name'    => 'appid',
@@ -251,13 +285,11 @@ class OpenWeatherStation extends IPSModule
         ];
 
         $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'Transmit weatherdata every X minutes'
-        ];
-        $formElements[] = [
             'type'    => 'NumberSpinner',
-            'name'    => 'transmit_interval',
-            'caption' => 'Minutes'
+            'minimum' => 0,
+            'suffix'  => 'Minutes',
+            'name'    => 'update_interval',
+            'caption' => 'Transmission interval'
         ];
 
         return $formElements;
@@ -273,18 +305,28 @@ class OpenWeatherStation extends IPSModule
             'onClick' => 'OpenWeatherStation_TransmitMeasurements($id);'
         ];
 
-        $formActions[] = [
-            'type'    => 'ExpansionPanel',
-            'caption' => 'Information',
-            'items'   => [
-                [
-                    'type'    => 'Label',
-                    'caption' => $this->InstanceInfo($this->InstanceID),
-                ],
-            ],
-        ];
+        $formActions[] = $this->GetInformationForm();
+        $formActions[] = $this->GetReferencesForm();
 
         return $formActions;
+    }
+
+    public function RequestAction($Ident, $Value)
+    {
+        if ($this->CommonRequestAction($Ident, $Value)) {
+            return;
+        }
+
+        if ($this->GetStatus() == IS_INACTIVE) {
+            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+            return;
+        }
+
+        switch ($Ident) {
+            default:
+                $this->SendDebug(__FUNCTION__, 'invalid ident ' . $Ident, 0);
+                break;
+        }
     }
 
     protected function SetTransmitInterval()
@@ -321,14 +363,14 @@ class OpenWeatherStation extends IPSModule
         $values = [];
         foreach ($vars as $var) {
             $varID = $this->ReadPropertyInteger($var . '_var');
-            $val = $varID != 0 ? GetValue($varID) : '';
+            $val = $varID >= 10000 ? GetValue($varID) : '';
             $values[$var] = $val;
         }
 
         $this->SendDebug(__FUNCTION__, 'values=' . print_r($values, true), 0);
 
         $convert_script = $this->ReadPropertyInteger('convert_script');
-        if ($convert_script > 0) {
+        if ($convert_script >= 10000) {
             $r = IPS_RunScriptWaitEx($convert_script, ['InstanceID' => $this->InstanceID, 'values' => json_encode($values)]);
             if ($r != '') {
                 $values = json_decode($r, true);

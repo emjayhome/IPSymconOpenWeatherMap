@@ -81,8 +81,12 @@ Verweise:
 
 ## 7. Versions-Historie
 
-- 2.3 @ 18.01.2022 08:00
+- 2.3 @ 08.04.2022 09:54 (beta)
+  - Korrektur in OpenWeatherOneCall: Windgeschwindigkeit wurde nicht von 'm/s' zu 'km/h' umgerechnet
   - automatischer Retry nach HTTP-Server-Error
+  - Anpassungen an IPS 6.2 (Prüfung auf ungültige ID's)
+  - Möglichkeit der Anzeige der Instanz-Referenzen
+  - libs/common.php -> CommonStubs
 
 - 2.2 @ 28.12.2021 13:35
   - Anzeige der Modul/Bibliotheks-Informationen

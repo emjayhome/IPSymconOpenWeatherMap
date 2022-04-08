@@ -44,6 +44,13 @@
 				" ... Achtung: ein Verringern der Anzahl löscht die überflüssigen Variablen!",
 			"Count": "Anzahl",
 
+			"Update interval": "Aktualisierungsintervall",
+			"Minutes": "Minuten",
+
+			"API-Key must be specified": "API-Key muss angegeben werden",
+			"The following points of the configuration are incorrect":
+				"Die folgenden Punkte der Konfiguration sind fehlerhaft",
+
 			"Begin of minutely forecast-period": "Beginn des minütlichen Vorhersage-Zeitraumes",
 			"Begin of hourly forecast-period": "Beginn des stündlichen Vorhersage-Zeitraumes",
 			"Begin of daily forecast-period": "Beginn des täglichen Vorhersage-Zeitraumes",
@@ -56,16 +63,16 @@
 			"Condition-id": "Wetterbedingung-Id",
 			"Conditions": "Wetterbedingungen",
 			"Current weather condition": "aktuelle Wetterbedingung",
-            "Day temperature": "Tagestemperatur",
+			"Day temperature": "Tagestemperatur",
 			"Dewpoint": "Taupunkt",
-            "Evening temperature": "Abendtemperatur",
+			"Evening temperature": "Abendtemperatur",
 			"Heatindex": "Hitzeindex",
 			"Humidity": "Luftfeuchtigkeit",
 			"last measurement": "letzte Messung",
 			"maximum temperature": "maximale Temperatur",
 			"minimum temperature": "minimale Temperatur",
 			"Morning temperature": "Morgentemperatur",
-            "Night temperature": "Nachtemperatur",
+			"Night temperature": "Nachtemperatur",
 			"Rainfall of last hour": "Regenmenge der letzten Stunde",
 			"Rainfall": "Regenmenge",
 			"Rain propability": "Regenwahrscheinlichkeit",
@@ -108,10 +115,36 @@
 			"Hurricane force": "orkanartiger Sturm",
 			"Violent storm": "Orkan",
 
-			"Update weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
-			"Minutes": "Minuten",
-
 			"Update weatherdata": "Aktualisiere Wetterdaten",
+
+			"Test area": "Test-Bereich",
+
+			"Expert area": "Experten-Bereich",
+			"Re-install variable-profiles": "Variablenprofile erneut einrichten",
+
+			"Information": "Information",
+
+			"Category": "Kategorie",
+			"Instance": "Instanz",
+			"Variable": "Variable",
+			"Script": "Skript",
+			"Event": "Ereignis",
+			"Medium": "Medium",
+			"Link": "Verknüpfung",
+			"PHP script": "PHP-Skript",
+			"Flow plan": "Ablaufplan",
+			"Triggered event": "Ausgelöstes Ereignis",
+			"Cyclic event": "Zyklisches Ereignis",
+			"Scheduled event": "Geplantes Ereignis",
+			"References": "Referenzen",
+			"by instance used objects": "durch die Instanz verwendete Objekte",
+			"Objects using the instance": "Objekte, die die Instanz verwenden",
+			"Referenced statusvariables": "referenzierte Statusvariablen",
+			"Ident": "Ident",
+			"Object": "Objekt",
+			"Area": "Bereich",
+			"Name": "Bezeichnung",
+			"Open object": "Objekt öffnen",
 
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",

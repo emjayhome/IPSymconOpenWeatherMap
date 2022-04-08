@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
+require_once __DIR__ . '/../libs/CommonStubs/common.php'; // globale Funktionen
 require_once __DIR__ . '/../libs/local.php';   // lokale Funktionen
 
 class OpenWeatherData extends IPSModule
 {
-    use OpenWeatherMapCommonLib;
+    use StubsCommonLib;
     use OpenWeatherMapLocalLib;
 
     public function Create()
@@ -51,20 +51,7 @@ class OpenWeatherData extends IPSModule
         $this->RegisterPropertyBoolean('with_summary', false);
         $this->RegisterPropertyInteger('summary_script', 0);
 
-        $this->CreateVarProfile('OpenWeatherMap.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('OpenWeatherMap.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
-        $this->CreateVarProfile('OpenWeatherMap.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('OpenWeatherMap.Dewpoint', VARIABLETYPE_FLOAT, ' °C', 0, 30, 0, 0, 'Drops');
-        $this->CreateVarProfile('OpenWeatherMap.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature');
-        $this->CreateVarProfile('OpenWeatherMap.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge');
-        $this->CreateVarProfile('OpenWeatherMap.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 1, 'WindSpeed');
-        $this->CreateVarProfile('OpenWeatherMap.WindStrength', VARIABLETYPE_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('OpenWeatherMap.WindAngle', VARIABLETYPE_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('OpenWeatherMap.WindDirection', VARIABLETYPE_STRING, '', 0, 0, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('OpenWeatherMap.Rainfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Rainfall');
-        $this->CreateVarProfile('OpenWeatherMap.RainProbability', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Rainfall');
-        $this->CreateVarProfile('OpenWeatherMap.Snowfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Snow');
-        $this->CreateVarProfile('OpenWeatherMap.Cloudiness', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Cloud');
+        $this->InstallVarProfiles(false);
 
         $this->SetMultiBuffer('Current', '');
         $this->SetMultiBuffer('HourlyForecast', '');
@@ -80,6 +67,27 @@ class OpenWeatherData extends IPSModule
         if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
             $this->SetUpdateInterval();
         }
+    }
+
+    private function CheckConfiguration()
+    {
+        $s = '';
+        $r = [];
+
+        $appid = $this->ReadPropertyString('appid');
+        if ($appid == '') {
+            $this->SendDebug(__FUNCTION__, '"appid" is needed', 0);
+            $r[] = $this->Translate('API-Key must be specified');
+        }
+
+        if ($r != []) {
+            $s = $this->Translate('The following points of the configuration are incorrect') . ':' . PHP_EOL;
+            foreach ($r as $p) {
+                $s .= '- ' . $p . PHP_EOL;
+            }
+        }
+
+        return $s;
     }
 
     public function ApplyChanges()
@@ -162,8 +170,8 @@ class OpenWeatherData extends IPSModule
             return;
         }
 
-        $appid = $this->ReadPropertyString('appid');
-        if ($appid == '') {
+        if ($this->CheckConfiguration() != false) {
+            $this->SetTimerInterval('UpdateData', 0);
             $this->SetStatus(self::$IS_INVALIDCONFIG);
             return;
         }
@@ -175,7 +183,7 @@ class OpenWeatherData extends IPSModule
         $propertyNames = ['summary_script'];
         foreach ($propertyNames as $name) {
             $oid = $this->ReadPropertyInteger($name);
-            if ($oid > 0) {
+            if ($oid >= 10000) {
                 $this->RegisterReference($oid);
             }
         }
@@ -192,14 +200,27 @@ class OpenWeatherData extends IPSModule
         $formElements = [];
 
         $formElements[] = [
+            'type'    => 'Label',
+            'caption' => 'OpenWeatherMap - fetch current observations and forecast'
+        ];
+
+        @$s = $this->CheckConfiguration();
+        if ($s != '') {
+            $formElements[] = [
+                'type'    => 'Label',
+                'caption' => $s
+            ];
+            $formElements[] = [
+                'type'    => 'Label',
+            ];
+        }
+
+        $formElements[] = [
             'type'    => 'CheckBox',
             'name'    => 'module_disable',
             'caption' => 'Disable instance'
         ];
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'OpenWeatherMap - fetch current observations and forecast'
-        ];
+
         $formElements[] = [
             'type'    => 'ValidationTextBox',
             'name'    => 'appid',
@@ -351,13 +372,11 @@ class OpenWeatherData extends IPSModule
         ];
 
         $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'Update weatherdata every X minutes'
-        ];
-        $formElements[] = [
             'type'    => 'NumberSpinner',
+            'minimum' => 0,
+            'suffix'  => 'Minutes',
             'name'    => 'update_interval',
-            'caption' => 'Minutes'
+            'caption' => 'Update interval'
         ];
 
         return $formElements;
@@ -373,18 +392,40 @@ class OpenWeatherData extends IPSModule
             'onClick' => 'OpenWeatherData_UpdateData($id);'
         ];
 
+        $items[] = [
+            'type'    => 'Button',
+            'caption' => 'Re-install variable-profiles',
+            'onClick' => 'OpenWeatherData_InstallVarProfiles($id, true);'
+        ];
         $formActions[] = [
-            'type'    => 'ExpansionPanel',
-            'caption' => 'Information',
-            'items'   => [
-                [
-                    'type'    => 'Label',
-                    'caption' => $this->InstanceInfo($this->InstanceID),
-                ],
-            ],
+            'type'      => 'ExpansionPanel',
+            'caption'   => 'Expert area',
+            'expanded ' => false,
+            'items'     => $items,
         ];
 
+        $formActions[] = $this->GetInformationForm();
+        $formActions[] = $this->GetReferencesForm();
+
         return $formActions;
+    }
+
+    public function RequestAction($Ident, $Value)
+    {
+        if ($this->CommonRequestAction($Ident, $Value)) {
+            return;
+        }
+
+        if ($this->GetStatus() == IS_INACTIVE) {
+            $this->SendDebug(__FUNCTION__, 'instance is inactive, skip', 0);
+            return;
+        }
+
+        switch ($Ident) {
+            default:
+                $this->SendDebug(__FUNCTION__, 'invalid ident ' . $Ident, 0);
+                break;
+        }
     }
 
     protected function SetUpdateInterval()
@@ -407,7 +448,7 @@ class OpenWeatherData extends IPSModule
         $with_summary = $this->ReadPropertyBoolean('with_summary');
         if ($with_summary) {
             $summary_script = $this->ReadPropertyInteger('summary_script');
-            if ($summary_script > 0) {
+            if ($summary_script >= 10000) {
                 $html = IPS_RunScriptWaitEx($summary_script, ['InstanceID' => $this->InstanceID]);
             } else {
                 $html = $this->Build_WeatherSummary();
@@ -483,6 +524,7 @@ class OpenWeatherData extends IPSModule
         $visibility = $this->GetArrayElem($jdata, 'visibility', 0);
 
         $wind_speed = $this->GetArrayElem($jdata, 'wind.speed', 0);
+        $wind_speed = (int) $this->ms2kmh($wind_speed);
         $wind_deg = $this->GetArrayElem($jdata, 'wind.deg', 0);
 
         $rain_3h = $this->GetArrayElem($jdata, 'rain.3h', 0);
@@ -520,7 +562,6 @@ class OpenWeatherData extends IPSModule
             $this->SetValue('AbsoluteHumidity', $abs_humidity);
         }
 
-        $wind_speed = (int) $this->ms2kmh($wind_speed);
         $this->SetValue('WindSpeed', $wind_speed);
         if ($with_windangle) {
             $this->SetValue('WindAngle', $wind_deg);
@@ -658,6 +699,7 @@ class OpenWeatherData extends IPSModule
             $visibility = $this->GetArrayElem($ent, 'visibility', 0);
 
             $wind_speed = $this->GetArrayElem($ent, 'wind.speed', 0);
+            $wind_speed = (int) $this->ms2kmh($wind_speed);
             $wind_deg = $this->GetArrayElem($ent, 'wind.deg', 0);
 
             $rain_3h = $this->GetArrayElem($ent, 'rain.3h', 0);
@@ -692,7 +734,6 @@ class OpenWeatherData extends IPSModule
 
             $this->SetValue($pre . 'Humidity' . $post, $humidity);
 
-            $wind_speed = (int) $this->ms2kmh($wind_speed);
             $this->SetValue($pre . 'WindSpeed' . $post, $wind_speed);
             if ($with_windangle) {
                 $this->SetValue($pre . 'WindAngle' . $post, $wind_deg);

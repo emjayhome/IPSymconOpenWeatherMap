@@ -42,6 +42,13 @@
 				" ... Achtung: ein Verringern der Anzahl löscht die überflüssigen Variablen!",
 			"Count": "Anzahl",
 
+			"Update interval": "Aktualisierungsintervall",
+			"Minutes": "Minuten",
+
+			"API-Key must be specified": "API-Key muss angegeben werden",
+			"The following points of the configuration are incorrect":
+				"Die folgenden Punkte der Konfiguration sind fehlerhaft",
+
 			"absolute humidity": "absolute Luftfeuchtigkeit",
 			"absolute pressure": "absoluter Luftdruck",
 			"Air pressure": "Luftdruck",
@@ -114,11 +121,36 @@
 			"Hurricane force": "orkanartiger Sturm",
 			"Violent storm": "Orkan",
 
-			"Update weatherdata every X minutes": "Aktualisiere Wetterdaten alle X Minuten",
-			"Minutes": "Minuten",
-
 			"Update weatherdata": "Aktualisiere Wetterdaten",
-			"Module description": "Modulbeschreibung",
+
+			"Test area": "Test-Bereich",
+
+			"Expert area": "Experten-Bereich",
+			"Re-install variable-profiles": "Variablenprofile erneut einrichten",
+
+			"Information": "Information",
+
+			"Category": "Kategorie",
+			"Instance": "Instanz",
+			"Variable": "Variable",
+			"Script": "Skript",
+			"Event": "Ereignis",
+			"Medium": "Medium",
+			"Link": "Verknüpfung",
+			"PHP script": "PHP-Skript",
+			"Flow plan": "Ablaufplan",
+			"Triggered event": "Ausgelöstes Ereignis",
+			"Cyclic event": "Zyklisches Ereignis",
+			"Scheduled event": "Geplantes Ereignis",
+			"References": "Referenzen",
+			"by instance used objects": "durch die Instanz verwendete Objekte",
+			"Objects using the instance": "Objekte, die die Instanz verwenden",
+			"Referenced statusvariables": "referenzierte Statusvariablen",
+			"Ident": "Ident",
+			"Object": "Objekt",
+			"Area": "Bereich",
+			"Name": "Bezeichnung",
+			"Open object": "Objekt öffnen",
 
 			"Instance getting created": "Instanz wird erstellt",
 			"Instance is active": "Instanz ist aktiv",
