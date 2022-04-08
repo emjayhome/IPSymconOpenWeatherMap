@@ -81,7 +81,7 @@ Verweise:
 
 ## 7. Versions-Historie
 
-- 2.3.1 @ 08.04.2022 15:29 (beta)
+- 2.3.1 @ 08.04.2022 15:29
   - Abfangen von fehlenden Vorhersage-Daten (daily, hourly, minutely)
 
 - 2.3 @ 08.04.2022 09:54
