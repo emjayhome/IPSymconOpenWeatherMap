@@ -685,6 +685,10 @@ class OpenWeatherOneCall extends IPSModule
             $post = '_' . sprintf('%02d', $i);
 
             $ent = $this->GetArrayElem($jdata, 'minutely.' . $i, '');
+            if ($ent == false) {
+                $this->SendDebug(__FUNCTION__, 'minutely[' . $i . '] not in data', 0);
+                break;
+            }
             $this->SendDebug(__FUNCTION__, 'minutely[' . $i . ']=' . print_r($ent, true), 0);
 
             $begin_ts = $this->GetArrayElem($ent, 'dt', 0);
@@ -700,6 +704,10 @@ class OpenWeatherOneCall extends IPSModule
             $post = '_' . sprintf('%02d', $i);
 
             $ent = $this->GetArrayElem($jdata, 'hourly.' . $i, '');
+            if ($ent == false) {
+                $this->SendDebug(__FUNCTION__, 'hourly[' . $i . '] not in data', 0);
+                break;
+            }
             $this->SendDebug(__FUNCTION__, 'hourly[' . $i . ']=' . print_r($ent, true), 0);
 
             $begin_ts = $this->GetArrayElem($ent, 'dt', 0);
@@ -798,6 +806,10 @@ class OpenWeatherOneCall extends IPSModule
             $post = '_' . sprintf('%02d', $i);
 
             $ent = $this->GetArrayElem($jdata, 'daily.' . $i, '');
+            if ($ent == false) {
+                $this->SendDebug(__FUNCTION__, 'daily[' . $i . '] not in data', 0);
+                break;
+            }
             $this->SendDebug(__FUNCTION__, 'daily[' . $i . ']=' . print_r($ent, true), 0);
 
             $begin_ts = $this->GetArrayElem($ent, 'dt', 0);
