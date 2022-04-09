@@ -78,8 +78,14 @@ GUIDs
 Verweise:
 - https://openweathermap.org/api
 
+Beispielscripte:
+- Zusammenfassung der Wetter-Bedingungen: [docs/oneCallStatus.php](docs/oneCallStatus.php)
+- Setzen einer HTML-Box mit dem 'ConditionIcon': [docs/oneCallConditionIcon.php](docs/oneCallConditionIcon.php)
 
 ## 7. Versions-Historie
+
+- 2.3.2 @ 09.04.2022 18:22
+  - README um Hinweis auf Beispiel-Scripte ergänzt
 
 - 2.3.1 @ 08.04.2022 15:29
   - Abfangen von fehlenden Vorhersage-Daten (daily, hourly, minutely)
