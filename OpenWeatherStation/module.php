@@ -406,7 +406,7 @@ class OpenWeatherStation extends IPSModule
 
         $this->SetValue('LastTransmission', $now);
 
-		$this->SendDebug(__FUNCTION__, $this->PrintTimer('TransmitMeasurements'), 0);
+        $this->SendDebug(__FUNCTION__, $this->PrintTimer('TransmitMeasurements'), 0);
         return true;
     }
 

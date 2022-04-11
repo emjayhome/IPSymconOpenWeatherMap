@@ -915,7 +915,7 @@ class OpenWeatherOneCall extends IPSModule
 
         $this->SetStatus(IS_ACTIVE);
 
-		$this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateData'), 0);
+        $this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateData'), 0);
     }
 
     private function do_HttpRequest($cmd, $args)

@@ -462,7 +462,7 @@ class OpenWeatherData extends IPSModule
             $this->SetValue('CurrentCondition', $html);
         }
 
-		$this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateData'), 0);
+        $this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateData'), 0);
     }
 
     public function UpdateCurrent()
