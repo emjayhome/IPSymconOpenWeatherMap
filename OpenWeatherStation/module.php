@@ -86,13 +86,13 @@ class OpenWeatherStation extends IPSModule
 
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
-            $this->SetTimerInterval('TransmitMeasurements', 0);
+            $this->MaintainTimer('TransmitMeasurements', 0);
             $this->SetStatus(IS_INACTIVE);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
-            $this->SetTimerInterval('TransmitMeasurements', 0);
+            $this->MaintainTimer('TransmitMeasurements', 0);
             $this->SetStatus(self::$IS_INVALIDCONFIG);
             return;
         }
@@ -288,7 +288,7 @@ class OpenWeatherStation extends IPSModule
             'type'    => 'NumberSpinner',
             'minimum' => 0,
             'suffix'  => 'Minutes',
-            'name'    => 'update_interval',
+            'name'    => 'transmit_interval',
             'caption' => 'Transmission interval'
         ];
 
@@ -333,7 +333,7 @@ class OpenWeatherStation extends IPSModule
     {
         $min = $this->ReadPropertyInteger('transmit_interval');
         $msec = $min > 0 ? $min * 1000 * 60 : 0;
-        $this->SetTimerInterval('TransmitMeasurements', $msec);
+        $this->MaintainTimer('TransmitMeasurements', $msec);
     }
 
     public function TransmitMeasurements()
@@ -405,6 +405,8 @@ class OpenWeatherStation extends IPSModule
         }
 
         $this->SetValue('LastTransmission', $now);
+
+		$this->SendDebug(__FUNCTION__, $this->PrintTimer('TransmitMeasurements'), 0);
         return true;
     }
 

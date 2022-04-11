@@ -165,13 +165,13 @@ class OpenWeatherData extends IPSModule
 
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
-            $this->SetTimerInterval('UpdateData', 0);
+            $this->MaintainTimer('UpdateData', 0);
             $this->SetStatus(IS_INACTIVE);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
-            $this->SetTimerInterval('UpdateData', 0);
+            $this->MaintainTimer('UpdateData', 0);
             $this->SetStatus(self::$IS_INVALIDCONFIG);
             return;
         }
@@ -432,7 +432,7 @@ class OpenWeatherData extends IPSModule
     {
         $min = $this->ReadPropertyInteger('update_interval');
         $msec = $min > 0 ? $min * 1000 * 60 : 0;
-        $this->SetTimerInterval('UpdateData', $msec);
+        $this->MaintainTimer('UpdateData', $msec);
     }
 
     public function UpdateData()
@@ -461,6 +461,8 @@ class OpenWeatherData extends IPSModule
             $html = $this->Build_CurrentCondition();
             $this->SetValue('CurrentCondition', $html);
         }
+
+		$this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateData'), 0);
     }
 
     public function UpdateCurrent()

@@ -84,6 +84,9 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
+- 2.3.3 @ 11.04.2022 12:06
+  - Ausgabe der Instanz-Timer unter "Referenzen"
+
 - 2.3.2 @ 09.04.2022 18:22
   - README um Hinweis auf Beispiel-Scripte ergänzt
 

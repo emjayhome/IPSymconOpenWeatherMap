@@ -212,13 +212,13 @@ class OpenWeatherOneCall extends IPSModule
 
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
-            $this->SetTimerInterval('UpdateData', 0);
+            $this->MaintainTimer('UpdateData', 0);
             $this->SetStatus(IS_INACTIVE);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
-            $this->SetTimerInterval('UpdateData', 0);
+            $this->MaintainTimer('UpdateData', 0);
             $this->SetStatus(self::$IS_INVALIDCONFIG);
             return;
         }
@@ -511,7 +511,7 @@ class OpenWeatherOneCall extends IPSModule
     {
         $min = $this->ReadPropertyInteger('update_interval');
         $msec = $min > 0 ? $min * 1000 * 60 : 0;
-        $this->SetTimerInterval('UpdateData', $msec);
+        $this->MaintainTimer('UpdateData', $msec);
     }
 
     public function UpdateData()
@@ -914,6 +914,8 @@ class OpenWeatherOneCall extends IPSModule
         $this->SetMultiBuffer('Data', json_encode($jdata));
 
         $this->SetStatus(IS_ACTIVE);
+
+		$this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateData'), 0);
     }
 
     private function do_HttpRequest($cmd, $args)
