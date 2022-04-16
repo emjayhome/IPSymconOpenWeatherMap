@@ -4,8 +4,8 @@
 	"type": 3,
 	"vendor": "",
 	"aliases": [
-			"OpenWeatherMap - Datenabruf"
-		],
+		"OpenWeatherMap - Datenabruf"
+	],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],

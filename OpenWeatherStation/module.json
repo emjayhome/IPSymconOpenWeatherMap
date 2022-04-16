@@ -4,8 +4,8 @@
 	"type": 3,
 	"vendor": "",
 	"aliases": [
-			"OpenWeatherMap - Messwerte übertragen"
-		],
+		"OpenWeatherMap - Messwerte übertragen"
+	],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],

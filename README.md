@@ -84,8 +84,9 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
-- 2.3.4 @ 13.04.2022 16:05
+- 2.3.4 @ 16.04.2022 12:09
   - potentieller Namenskonflikt behoben (trait CommonStubs)
+  - Aktualisierung von submodule CommonStubs
 
 - 2.3.3 @ 11.04.2022 12:06
   - Ausgabe der Instanz-Timer unter "Referenzen"

@@ -4,8 +4,8 @@
 	"type": 3,
 	"vendor": "",
 	"aliases": [
-			"OpenWeatherMap - OneCall-Datenabruf"
-		],
+		"OpenWeatherMap - OneCall-Datenabruf"
+	],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
