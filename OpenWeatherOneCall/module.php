@@ -52,26 +52,28 @@ class OpenWeatherOneCall extends IPSModule
 
         $this->RegisterPropertyInteger('update_interval', 5);
 
+        $this->RegisterAttributeString('UpdateInfo', '');
+
         $this->InstallVarProfiles(false);
 
         $this->SetMultiBuffer('Data', '');
 
-        $this->RegisterTimer('UpdateData', 0, 'OpenWeatherOneCall_UpdateData(' . $this->InstanceID . ');');
+        $this->RegisterTimer('UpdateData', 0, $this->GetModulePrefix() . '_UpdateData(' . $this->InstanceID . ');');
+
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    public function MessageSink($tstamp, $senderID, $message, $data)
     {
-        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
+        parent::MessageSink($tstamp, $senderID, $message, $data);
 
-        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
+        if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
             $this->SetUpdateInterval();
         }
     }
 
-    private function CheckConfiguration()
+    private function CheckModuleConfiguration()
     {
-        $s = '';
         $r = [];
 
         $appid = $this->ReadPropertyString('appid');
@@ -80,19 +82,32 @@ class OpenWeatherOneCall extends IPSModule
             $r[] = $this->Translate('API-Key must be specified');
         }
 
-        if ($r != []) {
-            $s = $this->Translate('The following points of the configuration are incorrect') . ':' . PHP_EOL;
-            foreach ($r as $p) {
-                $s .= '- ' . $p . PHP_EOL;
-            }
-        }
-
-        return $s;
+        return $r;
     }
 
     public function ApplyChanges()
     {
         parent::ApplyChanges();
+
+        $this->MaintainReferences();
+
+        if ($this->CheckPrerequisites() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
+        }
+
+        if ($this->CheckUpdate() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->MaintainTimer('UpdateData', 0);
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
+        }
 
         $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
         $with_absolute_humidity = $this->ReadPropertyBoolean('with_absolute_humidity');
@@ -213,53 +228,23 @@ class OpenWeatherOneCall extends IPSModule
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(IS_INACTIVE);
+            $this->SetStatus(self::$IS_DEACTIVATED);
             return;
         }
 
-        if ($this->CheckConfiguration() != false) {
-            $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(self::$IS_INVALIDCONFIG);
-            return;
-        }
-
-        $refs = $this->GetReferenceList();
-        foreach ($refs as $ref) {
-            $this->UnregisterReference($ref);
-        }
-        $propertyNames = [];
-        foreach ($propertyNames as $name) {
-            $oid = $this->ReadPropertyInteger($name);
-            if ($oid > 0) {
-                $this->RegisterReference($oid);
-            }
-        }
+        $this->SetStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $this->SetUpdateInterval();
         }
-
-        $this->SetStatus(IS_ACTIVE);
     }
 
     private function GetFormElements()
     {
-        $formElements = [];
+        $formElements = $this->GetCommonFormElements('OpenWeatherMap - fetch current observations and forecast');
 
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'OpenWeatherMap - fetch current observations and forecast'
-        ];
-
-        @$s = $this->CheckConfiguration();
-        if ($s != '') {
-            $formElements[] = [
-                'type'    => 'Label',
-                'caption' => $s
-            ];
-            $formElements[] = [
-                'type'    => 'Label',
-            ];
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
         }
 
         $formElements[] = [
@@ -268,185 +253,178 @@ class OpenWeatherOneCall extends IPSModule
             'caption' => 'Disable instance'
         ];
 
-        $items = [];
-        $items[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'appid',
-            'caption' => 'API-Key'
-        ];
-
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'station data - if position is not set, Modue \'Location\' is used'
-        ];
-        $items[] = [
-            'type'    => 'SelectLocation',
-            'name'    => 'location',
-            'caption' => 'Location',
-        ];
-        $items[] = [
-            'type'    => 'NumberSpinner',
-            'name'    => 'altitude',
-            'caption' => 'Altitude',
-            'suffix'  => 'm'
-        ];
-
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'Language setting for textual weather-information (de, en, ...)'
-        ];
-        $items[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'lang',
-            'caption' => 'Language code'
-        ];
-
         $formElements[] = [
             'type'    => 'ExpansionPanel',
-            'items'   => $items,
+            'items'   => [
+                [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'appid',
+                    'caption' => 'API-Key'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'station data - if position is not set, Modue \'Location\' is used'
+                ],
+                [
+                    'type'    => 'SelectLocation',
+                    'name'    => 'location',
+                    'caption' => 'Location',
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'name'    => 'altitude',
+                    'caption' => 'Altitude',
+                    'suffix'  => 'm'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'Language setting for textual weather-information (de, en, ...)'
+                ],
+                [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'lang',
+                    'caption' => 'Language code'
+                ],
+            ],
             'caption' => 'Basic settings',
         ];
 
-        $items = [];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_absolute_pressure',
-            'caption' => ' ... absolute Pressure'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_absolute_humidity',
-            'caption' => ' ... absolute Humidity'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_dewpoint',
-            'caption' => ' ... Dewpoint'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_heatindex',
-            'caption' => ' ... Heatindex'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_uv_index',
-            'caption' => ' ... UV-Index'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_windchill',
-            'caption' => ' ... Windchill'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_windstrength',
-            'caption' => ' ... Windstrength'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_windstrength2text',
-            'caption' => ' ... Windstrength as text'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_windangle',
-            'caption' => ' ... Winddirection in degrees'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_winddirection',
-            'caption' => ' ... Winddirection with label'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_rain_probability',
-            'caption' => ' ... Rain propability'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_cloudiness',
-            'caption' => ' ... Cloudiness'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_conditions',
-            'caption' => ' ... Conditions'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_icon',
-            'caption' => ' ... Condition-icon'
-        ];
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_condition_id',
-            'caption' => ' ... Condition-id'
-        ];
-
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'precipitation forecast by the minute (max 60 minutes)'
-        ];
-        $items[] = [
-            'type'  => 'RowLayout',
-            'items' => [
-                [
-                    'type'    => 'NumberSpinner',
-                    'name'    => 'minutely_forecast_count',
-                    'caption' => 'Count',
-                    'maximum' => self::$MAX_MINUTELY_FORECAST
-                ],
-                [
-                    'type'    => 'Label',
-                    'caption' => ' ... attention: decreasing the number deletes the unused variables!'
-                ]
-            ]
-        ];
-
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'hourly forecast (max 48 hour)'
-        ];
-        $items[] = [
-            'type'  => 'RowLayout',
-            'items' => [
-                [
-                    'type'    => 'NumberSpinner',
-                    'name'    => 'hourly_forecast_count',
-                    'caption' => 'Count',
-                    'maximum' => self::$MAX_HOURLY_FORECAST
-                ],
-                [
-                    'type'    => 'Label',
-                    'caption' => ' ... attention: decreasing the number deletes the unused variables!'
-                ]
-            ]
-        ];
-
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'daily forecast (max 7 days)'
-        ];
-        $items[] = [
-            'type'  => 'RowLayout',
-            'items' => [
-                [
-                    'type'    => 'NumberSpinner',
-                    'name'    => 'daily_forecast_count',
-                    'caption' => 'Count',
-                    'maximum' => self::$MAX_DAILY_FORECAST
-                ],
-                [
-                    'type'    => 'Label',
-                    'caption' => ' ... attention: decreasing the number deletes the unused variables!'
-                ]
-            ]
-        ];
-
         $formElements[] = [
             'type'    => 'ExpansionPanel',
-            'items'   => $items,
+            'items'   => [
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_absolute_pressure',
+                    'caption' => ' ... absolute Pressure'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_absolute_humidity',
+                    'caption' => ' ... absolute Humidity'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_dewpoint',
+                    'caption' => ' ... Dewpoint'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_heatindex',
+                    'caption' => ' ... Heatindex'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_uv_index',
+                    'caption' => ' ... UV-Index'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windchill',
+                    'caption' => ' ... Windchill'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windstrength',
+                    'caption' => ' ... Windstrength'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windstrength2text',
+                    'caption' => ' ... Windstrength as text'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windangle',
+                    'caption' => ' ... Winddirection in degrees'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_winddirection',
+                    'caption' => ' ... Winddirection with label'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_rain_probability',
+                    'caption' => ' ... Rain propability'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_cloudiness',
+                    'caption' => ' ... Cloudiness'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_conditions',
+                    'caption' => ' ... Conditions'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_icon',
+                    'caption' => ' ... Condition-icon'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_condition_id',
+                    'caption' => ' ... Condition-id'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'precipitation forecast by the minute (max 60 minutes)'
+                ],
+                [
+                    'type'  => 'RowLayout',
+                    'items' => [
+                        [
+                            'type'    => 'NumberSpinner',
+                            'name'    => 'minutely_forecast_count',
+                            'caption' => 'Count',
+                            'maximum' => self::$MAX_MINUTELY_FORECAST
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => ' ... attention: decreasing the number deletes the unused variables!'
+                        ]
+                    ]
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'hourly forecast (max 48 hour)'
+                ],
+                [
+                    'type'  => 'RowLayout',
+                    'items' => [
+                        [
+                            'type'    => 'NumberSpinner',
+                            'name'    => 'hourly_forecast_count',
+                            'caption' => 'Count',
+                            'maximum' => self::$MAX_HOURLY_FORECAST
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => ' ... attention: decreasing the number deletes the unused variables!'
+                        ]
+                    ]
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'daily forecast (max 7 days)'
+                ],
+                [
+                    'type'  => 'RowLayout',
+                    'items' => [
+                        [
+                            'type'    => 'NumberSpinner',
+                            'name'    => 'daily_forecast_count',
+                            'caption' => 'Count',
+                            'maximum' => self::$MAX_DAILY_FORECAST
+                        ],
+                        [
+                            'type'    => 'Label',
+                            'caption' => ' ... attention: decreasing the number deletes the unused variables!'
+                        ]
+                    ]
+                ],
+            ],
             'caption' => 'optional weather data',
         ];
 
@@ -465,26 +443,36 @@ class OpenWeatherOneCall extends IPSModule
     {
         $formActions = [];
 
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
+
         $formActions[] = [
             'type'    => 'Button',
             'caption' => 'Update weatherdata',
-            'onClick' => 'OpenWeatherOneCall_UpdateData($id);'
+            'onClick' => $this->GetModulePrefix() . '_UpdateData($id);'
         ];
 
-        $items[] = [
-            'type'    => 'Button',
-            'caption' => 'Re-install variable-profiles',
-            'onClick' => 'OpenWeatherOneCall_InstallVarProfiles($id, true);'
-        ];
         $formActions[] = [
             'type'      => 'ExpansionPanel',
             'caption'   => 'Expert area',
             'expanded ' => false,
-            'items'     => $items,
+            'items'     => [
+                [
+                    'type'    => 'Button',
+                    'caption' => 'Re-install variable-profiles',
+                    'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
+                ],
+            ],
         ];
 
-        $formActions[] = $this->GetInformationForm();
-        $formActions[] = $this->GetReferencesForm();
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
 
         return $formActions;
     }

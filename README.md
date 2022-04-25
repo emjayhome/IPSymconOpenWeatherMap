@@ -84,6 +84,11 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
+- 2.4 @ 25.04.2022 16:17
+  - Übersetzung vervollständigt
+  - Implememtierung einer Update-Logik
+  - diverse interne Änderungen
+
 - 2.3.4 @ 16.04.2022 12:09
   - potentieller Namenskonflikt behoben (trait CommonStubs)
   - Aktualisierung von submodule CommonStubs

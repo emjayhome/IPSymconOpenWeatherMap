@@ -43,22 +43,26 @@ class OpenWeatherStation extends IPSModule
 
         $this->RegisterPropertyInteger('transmit_interval', 5);
 
-        $this->RegisterTimer('TransmitMeasurements', 0, 'OpenWeatherStation_TransmitMeasurements(' . $this->InstanceID . ');');
+        $this->RegisterAttributeString('UpdateInfo', '');
+
+        $this->InstallVarProfiles(false);
+
+        $this->RegisterTimer('TransmitMeasurements', 0, $this->GetModulePrefix() . '_TransmitMeasurements(' . $this->InstanceID . ');');
+
         $this->RegisterMessage(0, IPS_KERNELMESSAGE);
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    public function MessageSink($tstamp, $senderID, $message, $data)
     {
-        parent::MessageSink($TimeStamp, $SenderID, $Message, $Data);
+        parent::MessageSink($tstamp, $senderID, $message, $data);
 
-        if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) {
+        if ($message == IPS_KERNELMESSAGE && $data[0] == KR_READY) {
             $this->SetTransmitInterval();
         }
     }
 
-    private function CheckConfiguration()
+    private function CheckModlueConfiguration()
     {
-        $s = '';
         $r = [];
 
         $appid = $this->ReadPropertyString('appid');
@@ -67,40 +71,13 @@ class OpenWeatherStation extends IPSModule
             $r[] = $this->Translate('API-Key must be specified');
         }
 
-        if ($r != []) {
-            $s = $this->Translate('The following points of the configuration are incorrect') . ':' . PHP_EOL;
-            foreach ($r as $p) {
-                $s .= '- ' . $p . PHP_EOL;
-            }
-        }
-
-        return $s;
+        return $r;
     }
 
     public function ApplyChanges()
     {
         parent::ApplyChanges();
 
-        $vpos = 0;
-        $this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
-
-        $module_disable = $this->ReadPropertyBoolean('module_disable');
-        if ($module_disable) {
-            $this->MaintainTimer('TransmitMeasurements', 0);
-            $this->SetStatus(IS_INACTIVE);
-            return;
-        }
-
-        if ($this->CheckConfiguration() != false) {
-            $this->MaintainTimer('TransmitMeasurements', 0);
-            $this->SetStatus(self::$IS_INVALIDCONFIG);
-            return;
-        }
-
-        $refs = $this->GetReferenceList();
-        foreach ($refs as $ref) {
-            $this->UnregisterReference($ref);
-        }
         $propertyNames = [
             'convert_script',
             'dt_var',
@@ -117,38 +94,52 @@ class OpenWeatherStation extends IPSModule
             'wind_gust_var',
             'wind_speed_var'
         ];
-        foreach ($propertyNames as $name) {
-            $oid = $this->ReadPropertyInteger($name);
-            if ($oid >= 10000) {
-                $this->RegisterReference($oid);
-            }
+        $this->MaintainReferences($propertyNames);
+
+        if ($this->CheckPrerequisites() != false) {
+            $this->MaintainTimer('TransmitMeasurements', 0);
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
         }
+
+        if ($this->CheckUpdate() != false) {
+            $this->MaintainTimer('TransmitMeasurements', 0);
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->MaintainTimer('TransmitMeasurements', 0);
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
+        }
+
+        $vpos = 0;
+
+        $this->MaintainVariable('LastTransmission', $this->Translate('last transmission'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
+
+        $module_disable = $this->ReadPropertyBoolean('module_disable');
+        if ($module_disable) {
+            $this->MaintainTimer('TransmitMeasurements', 0);
+            $this->SetStatus(self::$IS_DEACTIVATED);
+            return;
+        }
+
+        $this->SetStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $this->SetTransmitInterval();
         }
-
-        $this->SetStatus(IS_ACTIVE);
     }
 
     private function GetFormElements()
     {
         $formElements = [];
 
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'OpenWeatherMap - Transmission of measurement values of own weather station'
-        ];
+        $formElements = $this->GetCommonFormElements('OpenWeatherMap - Transmission of measurement values of own weather station');
 
-        @$s = $this->CheckConfiguration();
-        if ($s != '') {
-            $formElements[] = [
-                'type'    => 'Label',
-                'caption' => $s
-            ];
-            $formElements[] = [
-                'type'    => 'Label',
-            ];
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
         }
 
         $formElements[] = [
@@ -158,130 +149,135 @@ class OpenWeatherStation extends IPSModule
         ];
 
         $formElements[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'appid',
-            'caption' => 'API-Key'
+            'type'    => 'ExpansionPanel',
+            'items'   => [
+                [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'appid',
+                    'caption' => 'API-Key'
+                ],
+                [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'station_id',
+                    'caption' => 'Station-ID'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'station data - if position is not set, Modue \'Location\' is used'
+                ],
+                [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'external_id',
+                    'caption' => 'external ID'
+                ],
+                [
+                    'type'    => 'ValidationTextBox',
+                    'name'    => 'name',
+                    'caption' => 'Name'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'digits'  => 5,
+                    'name'    => 'longitude',
+                    'caption' => 'Longitude',
+                    'suffix'  => '°'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'digits'  => 5,
+                    'name'    => 'latitude',
+                    'caption' => 'Latitude',
+                    'suffix'  => '°'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'name'    => 'altitude',
+                    'caption' => 'Altitude',
+                    'suffix'  => 'm'
+                ],
+            ],
+            'caption' => 'Basic settings',
         ];
 
         $formElements[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'station_id',
-            'caption' => 'Station-ID'
-        ];
-
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'station data - if position is not set, Modue \'Location\' is used'
-        ];
-        $formElements[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'external_id',
-            'caption' => 'external ID'
-        ];
-        $formElements[] = [
-            'type'    => 'ValidationTextBox',
-            'name'    => 'name',
-            'caption' => 'Name'
-        ];
-        $formElements[] = [
-            'type'    => 'NumberSpinner',
-            'digits'  => 5,
-            'name'    => 'longitude',
-            'caption' => 'Longitude',
-            'suffix'  => '°'
-        ];
-        $formElements[] = [
-            'type'    => 'NumberSpinner',
-            'digits'  => 5,
-            'name'    => 'latitude',
-            'caption' => 'Latitude',
-            'suffix'  => '°'
-        ];
-        $formElements[] = [
-            'type'    => 'NumberSpinner',
-            'name'    => 'altitude',
-            'caption' => 'Altitude',
-            'suffix'  => 'm'
-        ];
-
-        $formElements[] = [
-            'type'    => 'Label',
+            'type'    => 'ExpansionPanel',
+            'items'   => [
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'dt_var',
+                    'caption' => 'Time of measurement'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'temperature_var',
+                    'caption' => 'Temperature (°C)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'wind_speed_var',
+                    'caption' => 'Wind speed (m/s)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'wind_gust_var',
+                    'caption' => 'Wind gusts (m/s)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'wind_deg_var',
+                    'caption' => 'Wind direction (°)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'pressure_var',
+                    'caption' => 'Pressure (mbar)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'humidity_var',
+                    'caption' => 'Humidity (%)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'rain_1h_var',
+                    'caption' => 'Rainfall 1h (mm)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'rain_6h_var',
+                    'caption' => 'Rainfall 6h (mm)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'rain_24h_var',
+                    'caption' => 'Rainfall today (mm)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'snow_1h_var',
+                    'caption' => 'Snow 1h (mm)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'snow_6h_var',
+                    'caption' => 'Snow 6h (mm)'
+                ],
+                [
+                    'type'    => 'SelectVariable',
+                    'name'    => 'snow_24h_var',
+                    'caption' => 'Snow today (mm)'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'script to convert values'
+                ],
+                [
+                    'type'    => 'SelectScript',
+                    'name'    => 'convert_script',
+                    'caption' => 'script'
+                ],
+            ],
             'caption' => 'Variables with measurement values'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'dt_var',
-            'caption' => 'Time of measurement'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'temperature_var',
-            'caption' => 'Temperature (°C)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'wind_speed_var',
-            'caption' => 'Wind speed (m/s)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'wind_gust_var',
-            'caption' => 'Wind gusts (m/s)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'wind_deg_var',
-            'caption' => 'Wind direction (°)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'pressure_var',
-            'caption' => 'Pressure (mbar)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'humidity_var',
-            'caption' => 'Humidity (%)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'rain_1h_var',
-            'caption' => 'Rainfall 1h (mm)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'rain_6h_var',
-            'caption' => 'Rainfall 6h (mm)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'rain_24h_var',
-            'caption' => 'Rainfall today (mm)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'snow_1h_var',
-            'caption' => 'Snow 1h (mm)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'snow_6h_var',
-            'caption' => 'Snow 6h (mm)'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectVariable',
-            'name'    => 'snow_24h_var',
-            'caption' => 'Snow today (mm)'
-        ];
-
-        $formElements[] = [
-            'type'    => 'Label',
-            'caption' => 'script to convert values'
-        ];
-        $formElements[] = [
-            'type'    => 'SelectScript',
-            'name'    => 'convert_script',
-            'caption' => 'script'
         ];
 
         $formElements[] = [
@@ -299,14 +295,23 @@ class OpenWeatherStation extends IPSModule
     {
         $formActions = [];
 
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
+
         $formActions[] = [
             'type'    => 'Button',
             'caption' => 'Transmit weatherdata',
-            'onClick' => 'OpenWeatherStation_TransmitMeasurements($id);'
+            'onClick' => $this->GetModulePrefix() . '_TransmitMeasurements($id);'
         ];
 
-        $formActions[] = $this->GetInformationForm();
-        $formActions[] = $this->GetReferencesForm();
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
 
         return $formActions;
     }

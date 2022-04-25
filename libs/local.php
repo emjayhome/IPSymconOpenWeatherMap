@@ -4,31 +4,24 @@ declare(strict_types=1);
 
 trait OpenWeatherMapLocalLib
 {
-    public static $IS_INVALIDCONFIG = IS_EBASE + 1;
-    public static $IS_SERVERERROR = IS_EBASE + 2;
-    public static $IS_HTTPERROR = IS_EBASE + 3;
-    public static $IS_INVALIDDATA = IS_EBASE + 4;
-
-    public static $STATUS_INVALID = 0;
-    public static $STATUS_VALID = 1;
-    public static $STATUS_RETRYABLE = 2;
+    public static $IS_SERVERERROR = IS_EBASE + 10;
+    public static $IS_HTTPERROR = IS_EBASE + 11;
+    public static $IS_INVALIDDATA = IS_EBASE + 12;
 
     private function GetFormStatus()
     {
-        $formStatus = [];
-        $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
-        $formStatus[] = ['code' => IS_ACTIVE, 'icon' => 'active', 'caption' => 'Instance is active'];
-        $formStatus[] = ['code' => IS_DELETING, 'icon' => 'inactive', 'caption' => 'Instance is deleted'];
-        $formStatus[] = ['code' => IS_INACTIVE, 'icon' => 'inactive', 'caption' => 'Instance is inactive'];
-        $formStatus[] = ['code' => IS_NOTCREATED, 'icon' => 'inactive', 'caption' => 'Instance is not created'];
+        $formStatus = $this->GetCommonFormStatus();
 
-        $formStatus[] = ['code' => self::$IS_INVALIDCONFIG, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid configuration)'];
         $formStatus[] = ['code' => self::$IS_SERVERERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (server error)'];
         $formStatus[] = ['code' => self::$IS_HTTPERROR, 'icon' => 'error', 'caption' => 'Instance is inactive (http error)'];
         $formStatus[] = ['code' => self::$IS_INVALIDDATA, 'icon' => 'error', 'caption' => 'Instance is inactive (invalid data)'];
 
         return $formStatus;
     }
+
+    public static $STATUS_INVALID = 0;
+    public static $STATUS_VALID = 1;
+    public static $STATUS_RETRYABLE = 2;
 
     private function CheckStatus()
     {
@@ -62,12 +55,13 @@ trait OpenWeatherMapLocalLib
         $this->CreateVarProfile('OpenWeatherMap.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature', [], $reInstall);
         $this->CreateVarProfile('OpenWeatherMap.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge', [], $reInstall);
 
-        $associations = [];
-        $associations[] = ['Wert' =>  0, 'Name' => '%.1f', 'Farbe' => 0x80FF00];
-        $associations[] = ['Wert' =>  3, 'Name' => '%.1f', 'Farbe' => 0xFFFF00];
-        $associations[] = ['Wert' =>  6, 'Name' => '%.1f', 'Farbe' => 0xFF8040];
-        $associations[] = ['Wert' =>  8, 'Name' => '%.1f', 'Farbe' => 0xFF0000];
-        $associations[] = ['Wert' => 11, 'Name' => '%.1f', 'Farbe' => 0xFF00FF];
+        $associations = [
+            ['Wert' =>  0, 'Name' => '%.1f', 'Farbe' => 0x80FF00],
+            ['Wert' => 3, 'Name' => '%.1f', 'Farbe' => 0xFFFF00],
+            ['Wert' => 6, 'Name' => '%.1f', 'Farbe' => 0xFF8040],
+            ['Wert' => 8, 'Name' => '%.1f', 'Farbe' => 0xFF0000],
+            ['Wert' => 11, 'Name' => '%.1f', 'Farbe' => 0xFF00FF],
+        ];
         $this->CreateVarProfile('OpenWeatherMap.UVIndex', VARIABLETYPE_FLOAT, '', 0, 12, 0, 0, 'Sun', $associations, $reInstall);
 
         $this->CreateVarProfile('OpenWeatherMap.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 1, 'WindSpeed', [], $reInstall);
