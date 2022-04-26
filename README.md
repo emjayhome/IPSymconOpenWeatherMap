@@ -1,6 +1,6 @@
 # IPSymconOpenWeatherMap
 
-[![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.3+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
+[![IPS-Version](https://img.shields.io/badge/Symcon_Version-6+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -34,7 +34,7 @@ _OpenWeatherStation_:
 
 ## 2. Voraussetzungen
 
- - IP-Symcon ab Version 5.3
+ - IP-Symcon ab Version 6
 
 ## 3. Installation
 
@@ -83,6 +83,10 @@ Beispielscripte:
 - Setzen einer HTML-Box mit dem 'ConditionIcon': [docs/oneCallConditionIcon.php](docs/oneCallConditionIcon.php)
 
 ## 7. Versions-Historie
+
+- 2.4.1 @ 26.04.2022 12:10
+  - Korrektur: self::$IS_DEACTIVATED wieder IS_INACTIVE
+  - IPS-Version ist nun minimal 6.0
 
 - 2.4 @ 25.04.2022 16:17
   - Übersetzung vervollständigt
