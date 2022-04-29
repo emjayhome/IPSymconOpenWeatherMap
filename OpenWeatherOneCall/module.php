@@ -14,6 +14,15 @@ class OpenWeatherOneCall extends IPSModule
     public static $MAX_HOURLY_FORECAST = 48;
     public static $MAX_DAILY_FORECAST = 7;
 
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
+
     public function Create()
     {
         parent::Create();

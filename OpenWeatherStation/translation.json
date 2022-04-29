@@ -1,0 +1,51 @@
+{
+	"translations": {
+		"de": {
+			"OpenWeatherMap - Transmission of measurement values of own weather station": "OpenWeatherMap - Übertragung von Werten einer eigenen Wetterstation",
+
+			"__function__": "CheckConfiguration",
+			"API-Key must be specified": "API-Key muss angegeben werden",
+
+			"__elements__": "",
+			"Disable instance": "Instanz deaktivieren",
+
+			"Basic settings": "Grundeinstellung",
+			"API-Key": "API-Key",
+			"Station-ID": "Station-ID",
+			"external ID": "externe ID",
+			"Name": "Name",
+			"station data - if position is not set, Modue 'Location' is used": "Angaben zur Station - falls die Position nicht angegeben ist, wird das Modul 'Location' verwendet",
+			"Longitude" : "Längengrad",
+			"Latitude" : "Breitengrad",
+			"Altitude" : "Höhe",
+
+			"Variables with measurement values": "Variablen mit Messwerten",
+			"Time of measurement": "Messzeitpunkt",
+			"Temperature (°C)": "Temperatur (°C)",
+			"Wind speed (m/s)": "Windgeschwindigkeit (m/s)",
+			"Wind gusts (m/s)": "Böen (m/s)",
+			"Wind direction (°)": "Windrichtung (°)",
+			"Pressure (mbar)": "Luftdruck (mbar)",
+			"Humidity (%)": "Luftfeuchte (%)",
+			"Rainfall 1h (mm)": "Regen 1h (mm)",
+			"Rainfall 6h (mm)": "Regen 6h (mm)",
+			"Rainfall today (mm)": "Regen heute (mm)",
+			"Snow 1h (mm)": "Schnee 1h (mm)",
+			"Snow 6h (mm)": "Schnee 6h (mm)",
+			"Snow today (mm)": "Schnee heute (mm)",
+			"script to convert values": "Script um Messwerte umzurechnen",
+			"script": "Script",
+
+			"Transmission interval": "Übertragungsintervall",
+			"Minutes": "Minuten",
+
+			"__variables__": "",
+			"last transmission": "letzte Übertragung",
+
+			"__actions__": "",
+			"Transmit weatherdata": "Wetterdaten übertragen",
+
+			"__end__": ""
+		}
+	}
+}

@@ -84,6 +84,9 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
+- 2.4.2 @ 29.04.2022 12:51
+  - Überlagerung von Translate und Aufteilung von locale.json in 3 translation.json (Modul, libs und CommonStubs)
+
 - 2.4.1 @ 26.04.2022 12:10
   - Korrektur: self::$IS_DEACTIVATED wieder IS_INACTIVE
   - IPS-Version ist nun minimal 6.0

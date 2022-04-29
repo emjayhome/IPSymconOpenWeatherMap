@@ -10,6 +10,15 @@ class OpenWeatherData extends IPSModule
     use OpenWeather\StubsCommonLib;
     use OpenWeatherMapLocalLib;
 
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
+
     public function Create()
     {
         parent::Create();
