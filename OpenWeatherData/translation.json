@@ -107,7 +107,7 @@
 			"NW": "NW",
 			"NNW": "NNW",
 
-			"__variable__": "Conditions",
+			"__variable__": "WindStrengthText",
 			"Calm": "Windstille",
 			"Light air": "leiser Zug",
 			"Light breeze": "leichte Brise",
