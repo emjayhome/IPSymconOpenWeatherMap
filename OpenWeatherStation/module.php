@@ -377,14 +377,14 @@ class OpenWeatherStation extends IPSModule
         $values = [];
         foreach ($vars as $var) {
             $varID = $this->ReadPropertyInteger($var . '_var');
-            $val = $varID >= 10000 ? GetValue($varID) : '';
+            $val = IPS_VariableExists($varID) ? GetValue($varID) : '';
             $values[$var] = $val;
         }
 
         $this->SendDebug(__FUNCTION__, 'values=' . print_r($values, true), 0);
 
         $convert_script = $this->ReadPropertyInteger('convert_script');
-        if ($convert_script >= 10000) {
+        if (IPS_ScriptExists($convert_script)) {
             $r = IPS_RunScriptWaitEx($convert_script, ['InstanceID' => $this->InstanceID, 'values' => json_encode($values)]);
             if ($r != '') {
                 $values = json_decode($r, true);

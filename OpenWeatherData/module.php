@@ -455,7 +455,7 @@ class OpenWeatherData extends IPSModule
         $with_summary = $this->ReadPropertyBoolean('with_summary');
         if ($with_summary) {
             $summary_script = $this->ReadPropertyInteger('summary_script');
-            if ($summary_script >= 10000) {
+            if (IPS_ScriptExists($summary_script)) {
                 $html = IPS_RunScriptWaitEx($summary_script, ['InstanceID' => $this->InstanceID]);
             } else {
                 $html = $this->Build_WeatherSummary();
