@@ -84,6 +84,9 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
+- 2.4.5 @ 20.05.2022 15:30
+  - Fix: OpenWeatherData/Experten-Befreich
+
 - 2.4.4 @ 17.05.2022 15:38
   - update submodule CommonStubs
     Fix: Absicherung gegen fehlende Objekte

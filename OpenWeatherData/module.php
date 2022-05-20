@@ -405,9 +405,11 @@ class OpenWeatherData extends IPSModule
             'caption'   => 'Expert area',
             'expanded ' => false,
             'items'     => [
-                'type'    => 'Button',
-                'caption' => 'Re-install variable-profiles',
-                'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
+                [
+                    'type'    => 'Button',
+                    'caption' => 'Re-install variable-profiles',
+                    'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
+                ],
             ],
         ];
 
@@ -549,7 +551,7 @@ class OpenWeatherData extends IPSModule
             foreach ($weather as $w) {
                 $description = $this->GetArrayElem($w, 'description', '');
                 if ($description != '') {
-                    $conditions .= ($conditions != '' ? ', ' : '') . $this->Translate($description);
+                    $conditions .= ($conditions != '' ? ', ' : '') . $description;
                 }
             }
             $icon = $this->GetArrayElem($weather, '0.icon', '');
@@ -724,7 +726,7 @@ class OpenWeatherData extends IPSModule
                 foreach ($weather as $w) {
                     $description = $this->GetArrayElem($w, 'description', '');
                     if ($description != '') {
-                        $conditions .= ($conditions != '' ? ', ' : '') . $this->Translate($description);
+                        $conditions .= ($conditions != '' ? ', ' : '') . $description;
                     }
                 }
                 $icon = $this->GetArrayElem($weather, '0.icon', '');

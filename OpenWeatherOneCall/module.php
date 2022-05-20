@@ -593,7 +593,7 @@ class OpenWeatherOneCall extends IPSModule
             foreach ($weather as $w) {
                 $description = $this->GetArrayElem($w, 'description', '');
                 if ($description != '') {
-                    $conditions .= ($conditions != '' ? ', ' : '') . $this->Translate($description);
+                    $conditions .= ($conditions != '' ? ', ' : '') . $description;
                 }
             }
             $icon = $this->GetArrayElem($weather, '0.icon', '');
@@ -733,7 +733,7 @@ class OpenWeatherOneCall extends IPSModule
                 foreach ($weather as $w) {
                     $description = $this->GetArrayElem($w, 'description', '');
                     if ($description != '') {
-                        $conditions .= ($conditions != '' ? ', ' : '') . $this->Translate($description);
+                        $conditions .= ($conditions != '' ? ', ' : '') . $description;
                     }
                 }
                 $icon = $this->GetArrayElem($weather, '0.icon', '');
@@ -839,7 +839,7 @@ class OpenWeatherOneCall extends IPSModule
                 foreach ($weather as $w) {
                     $description = $this->GetArrayElem($w, 'description', '');
                     if ($description != '') {
-                        $conditions .= ($conditions != '' ? ', ' : '') . $this->Translate($description);
+                        $conditions .= ($conditions != '' ? ', ' : '') . $description;
                     }
                 }
                 $icon = $this->GetArrayElem($weather, '0.icon', '');
