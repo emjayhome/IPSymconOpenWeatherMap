@@ -36,7 +36,7 @@ ruft die Daten von _OpenWeatherMap_ ab. Wird automatisch zyklisch durch die Inst
 
 ### Hilfsfunktionen
 
-`string OpenWeatherOneCalla_GetRawData(int $InstanzID)`
+`string OpenWeatherOneCall_GetRawData(int $InstanzID)`
 
 liefert die Original-Ergebnisse der HTML-Aufrufe, z.B. zur Darstellung der HTML-Box.
 
@@ -136,7 +136,7 @@ OpenWeatherMap.WindDirection
 siehe [hier](../README.md#6-anhang)
 
 Verweise:
-- https://openweathermap.org/current, https://openweathermap.org/forecast5
+- https://openweathermap.org/api/one-call-api
 
 ## 7. Versions-Historie
 

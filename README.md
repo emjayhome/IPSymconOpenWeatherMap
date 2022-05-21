@@ -84,6 +84,10 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
+- 2.4.6 @ 21.05.2022 07:57
+  - Fix in OpenWeatherOneCall_GetRawData()
+  - Korrektur von README.de
+
 - 2.4.5 @ 20.05.2022 15:30
   - Fix: OpenWeatherData - Absturz beim Öffnen des Experten-Bereichs
 
@@ -221,7 +225,7 @@ Beispielscripte:
 - 1.5 @ 11.10.2018 18:08
   - _ConditionIcons_ und _ConditionIds_ (Plural) ersetzt durch _ConditionIcon_ und _ConditionId_ (Singular).
   Es wird nur noch der wichtigste Eintrag gespeichert - laut _OpenWeatherMap_ ist das jeweils der erste Eintrag.
-  - zusätzliche temporäre Ablage der Originaldaten in internen Buffern und Funktion zum Abruf der Daten (_OpenWeatherMap_GetRawData()_)
+  - zusätzliche temporäre Ablage der Originaldaten in internen Buffern und Funktion zum Abruf der Daten (_OpenWeatherData_GetRawData()_)
 
 - 1.4 @ 10.10.2018 15:27
   - optionale Übernahme der Ids der Wetterbedingungen

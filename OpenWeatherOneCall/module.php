@@ -1155,7 +1155,7 @@ class OpenWeatherOneCall extends IPSModule
     public function GetRawData()
     {
         $data = $this->GetMultiBuffer('Data');
-        $this->SendDebug(__FUNCTION__, 'name=' . $name . ', size=' . strlen($data) . ', data=' . $data, 0);
+        $this->SendDebug(__FUNCTION__, 'size=' . strlen($data) . ', data=' . $data, 0);
         return $data;
     }
 }
