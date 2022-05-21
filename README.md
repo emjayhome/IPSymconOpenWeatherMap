@@ -86,7 +86,7 @@ Beispielscripte:
 
 - 2.4.6 @ 21.05.2022 07:57
   - Fix in OpenWeatherOneCall_GetRawData()
-  - Korrektur von README.de
+  - Korrektur von README.md
 
 - 2.4.5 @ 20.05.2022 15:30
   - Fix: OpenWeatherData - Absturz beim Öffnen des Experten-Bereichs
