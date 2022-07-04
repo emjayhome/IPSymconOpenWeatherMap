@@ -42,7 +42,7 @@ trait OpenWeatherMapLocalLib
         return $class;
     }
 
-    public function InstallVarProfiles(bool $reInstall = false)
+    private function InstallVarProfiles(bool $reInstall = false)
     {
         if ($reInstall) {
             $this->SendDebug(__FUNCTION__, 'reInstall=' . $this->bool2str($reInstall), 0);

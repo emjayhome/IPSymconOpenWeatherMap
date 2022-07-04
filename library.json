@@ -4,9 +4,9 @@
 	"name": "OpenWeatherMap",
 	"url": "https://github.com/demel42/IPSymconOpenWeatherMap",
 	"compatibility": {
-		"version": "6.0"
+		"version": "6.2"
 	},
-	"version": "2.4.6",
+	"version": "2.5",
 	"build": 0,
-	"date": 1653112625
+	"date": 1656931851
 }

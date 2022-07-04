@@ -84,6 +84,14 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
+- 2.5 @ 04.07.2022 12:50
+  - update submodule CommonStubs
+    Fix: Ausgabe des nächsten Timer-Zeitpunkts
+  - einige Funktionen (GetFormElements, GetFormActions) waren fehlerhafterweise "protected" und nicht "private"
+  - interne Funktionen sind nun private und ggfs nur noch via IPS_RequestAction() erreichbar
+  - Fix: Angabe der Kompatibilität auf 6.2 korrigiert
+  - Verbesserung: IPS-Status wird nur noch gesetzt, wenn er sich ändert
+
 - 2.4.6 @ 21.05.2022 07:57
   - Fix in OpenWeatherOneCall_GetRawData()
   - Korrektur von README.md

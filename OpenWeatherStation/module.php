@@ -107,19 +107,19 @@ class OpenWeatherStation extends IPSModule
 
         if ($this->CheckPrerequisites() != false) {
             $this->MaintainTimer('TransmitMeasurements', 0);
-            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            $this->MaintainStatus(self::$IS_INVALIDPREREQUISITES);
             return;
         }
 
         if ($this->CheckUpdate() != false) {
             $this->MaintainTimer('TransmitMeasurements', 0);
-            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            $this->MaintainStatus(self::$IS_UPDATEUNCOMPLETED);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
             $this->MaintainTimer('TransmitMeasurements', 0);
-            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            $this->MaintainStatus(self::$IS_INVALIDCONFIG);
             return;
         }
 
@@ -130,11 +130,11 @@ class OpenWeatherStation extends IPSModule
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
             $this->MaintainTimer('TransmitMeasurements', 0);
-            $this->SetStatus(IS_INACTIVE);
+            $this->MaintainStatus(IS_INACTIVE);
             return;
         }
 
-        $this->SetStatus(IS_ACTIVE);
+        $this->MaintainStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $this->SetTransmitInterval();
@@ -319,6 +319,15 @@ class OpenWeatherStation extends IPSModule
             'onClick' => $this->GetModulePrefix() . '_TransmitMeasurements($id);'
         ];
 
+        $formActions[] = [
+            'type'      => 'ExpansionPanel',
+            'caption'   => 'Expert area',
+            'expanded ' => false,
+            'items'     => [
+                $this->GetInstallVarProfilesFormItem(),
+            ],
+        ];
+
         $formActions[] = $this->GetInformationFormAction();
         $formActions[] = $this->GetReferencesFormAction();
 
@@ -412,7 +421,7 @@ class OpenWeatherStation extends IPSModule
         $postdata[] = $v;
 
         $statuscode = $this->do_HttpRequest('data/3.0/measurements', '', $postdata, 'POST', $result);
-        $this->SetStatus($statuscode ? $statuscode : IS_ACTIVE);
+        $this->MaintainStatus($statuscode ? $statuscode : IS_ACTIVE);
         if ($statuscode) {
             $this->SendDebug(__FUNCTION__, 'http-request failed', 0);
             return false;

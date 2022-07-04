@@ -102,19 +102,19 @@ class OpenWeatherOneCall extends IPSModule
 
         if ($this->CheckPrerequisites() != false) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            $this->MaintainStatus(self::$IS_INVALIDPREREQUISITES);
             return;
         }
 
         if ($this->CheckUpdate() != false) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            $this->MaintainStatus(self::$IS_UPDATEUNCOMPLETED);
             return;
         }
 
         if ($this->CheckConfiguration() != false) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            $this->MaintainStatus(self::$IS_INVALIDCONFIG);
             return;
         }
 
@@ -237,11 +237,11 @@ class OpenWeatherOneCall extends IPSModule
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
             $this->MaintainTimer('UpdateData', 0);
-            $this->SetStatus(IS_INACTIVE);
+            $this->MaintainStatus(IS_INACTIVE);
             return;
         }
 
-        $this->SetStatus(IS_ACTIVE);
+        $this->MaintainStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
             $this->SetUpdateInterval();
@@ -472,11 +472,7 @@ class OpenWeatherOneCall extends IPSModule
             'caption'   => 'Expert area',
             'expanded ' => false,
             'items'     => [
-                [
-                    'type'    => 'Button',
-                    'caption' => 'Re-install variable-profiles',
-                    'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
-                ],
+                $this->GetInstallVarProfilesFormItem(),
             ],
         ];
 
@@ -520,18 +516,13 @@ class OpenWeatherOneCall extends IPSModule
 
         $lat = 0;
         $lng = 0;
-        $location = $this->ReadPropertyString('location');
-        $this->SendDebug(__FUNCTION__, 'location=' . $location, 0);
-        if ($location != false) {
-            $loc = json_decode($location, true);
-            if ($loc != false) {
-                $lat = $loc['latitude'];
-                $lng = $loc['longitude'];
-            }
-        }
+		$loc = json_decode($this->ReadPropertyString('location'), true);
+		if ($loc != false) {
+			$lat = $loc['latitude'];
+			$lng = $loc['longitude'];
+		}
         if ($lat == 0 && $lng == 0) {
-            $id = IPS_GetInstanceListByModuleID('{45E97A63-F870-408A-B259-2933F7EABF74}')[0];
-            $loc = json_decode(IPS_GetProperty($id, 'Location'), true);
+			$loc = $this->GetSystemLocation();
             $lat = $loc['latitude'];
             $lng = $loc['longitude'];
         }
@@ -910,7 +901,7 @@ class OpenWeatherOneCall extends IPSModule
 
         $this->SetMultiBuffer('Data', json_encode($jdata));
 
-        $this->SetStatus(IS_ACTIVE);
+        $this->MaintainStatus(IS_ACTIVE);
 
         $this->SendDebug(__FUNCTION__, $this->PrintTimer('UpdateData'), 0);
     }
@@ -978,7 +969,7 @@ class OpenWeatherOneCall extends IPSModule
         if ($statuscode) {
             $this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
-            $this->SetStatus($statuscode);
+            $this->MaintainStatus($statuscode);
         }
 
         return $jdata;
