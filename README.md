@@ -84,7 +84,7 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
-- 2.5 @ 04.07.2022 16:41
+- 2.5 @ 05.07.2022 16:41
   - update submodule CommonStubs
     Fix: Ausgabe des nächsten Timer-Zeitpunkts
   - einige Funktionen (GetFormElements, GetFormActions) waren fehlerhafterweise "protected" und nicht "private"
