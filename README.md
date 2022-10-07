@@ -84,6 +84,10 @@ Beispielscripte:
 
 ## 7. Versions-Historie
 
+- 2.5.1 @ 07.10.2022 13:59
+  - update submodule CommonStubs
+    Fix: Update-Prüfung wieder funktionsfähig
+
 - 2.5 @ 05.07.2022 16:41
   - update submodule CommonStubs
     Fix: Ausgabe des nächsten Timer-Zeitpunkts
