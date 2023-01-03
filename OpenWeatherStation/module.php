@@ -53,6 +53,7 @@ class OpenWeatherStation extends IPSModule
         $this->RegisterPropertyInteger('transmit_interval', 5);
 
         $this->RegisterAttributeString('UpdateInfo', '');
+        $this->RegisterAttributeString('ApiCallStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
 
@@ -77,7 +78,7 @@ class OpenWeatherStation extends IPSModule
         $appid = $this->ReadPropertyString('appid');
         if ($appid == '') {
             $this->SendDebug(__FUNCTION__, '"appid" is needed', 0);
-            $r[] = $this->Translate('API-Key must be specified');
+            $r[] = $this->Translate('API key must be specified');
         }
 
         return $r;
@@ -163,12 +164,12 @@ class OpenWeatherStation extends IPSModule
                 [
                     'type'    => 'ValidationTextBox',
                     'name'    => 'appid',
-                    'caption' => 'API-Key'
+                    'caption' => 'API key'
                 ],
                 [
                     'type'    => 'ValidationTextBox',
                     'name'    => 'station_id',
-                    'caption' => 'Station-ID'
+                    'caption' => 'Station ID'
                 ],
                 [
                     'type'    => 'Label',
@@ -324,7 +325,7 @@ class OpenWeatherStation extends IPSModule
             'caption'   => 'Expert area',
             'expanded'  => false,
             'items'     => [
-                $this->GetInstallVarProfilesFormItem(),
+                $this->GetApiCallStatsFormItem(),
             ],
         ];
 
@@ -674,6 +675,8 @@ class OpenWeatherStation extends IPSModule
             $this->LogMessage('url=' . $url . ' => statuscode=' . $statuscode . ', err=' . $err, KL_WARNING);
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
 
         return $statuscode;
     }

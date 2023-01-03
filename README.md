@@ -20,14 +20,14 @@
 
 _OpenWeatherMap_ (https://openweathermap.org) ist eine Web-Seite, die Wetterdaten bereit stellt. Es gibt eine API, die sowohl einen kostenlosen Zugriff erlaubt als auch komerzielle Angebote beinhaltet.
 
-Das Modul behandelt nur die kostenlosen Zugriffe.
+Das Modul behandelt nur die kostenlosen Zugriffe bzw. den _"One Call by Call" subscription plan_, der aber ausreichen kostenlose Zugriffe auf die _One Call API 3.0_ ermöglicht.
 
 _OpenWeatherOneCall_:
-- Daten aus [OneCall-API](https://openweathermap.org/api/one-call-api)
+- Daten aus [One Call API 2.5](https://openweathermap.org/api/one-call-api) bzw. [One Call API 3.0](https://openweathermap.org/api/one-call-3)
 
 _OpenWeatherData_:
-- aktuellen Daten (_Current weather data_)
-- stündlichen Vorhersagen (_5 day / 3 hour forecast_)
+- aktuellen Daten [Current weather data](https://openweathermap.org/current)
+- Vorhersagen in 3-Stunden-Schritten [5 day weather forecast](https://openweathermap.org/forecast5)
 
 _OpenWeatherStation_:
 - Übertragung von Daten einer lokalen Wetterstation an _OpenWeather_
@@ -83,6 +83,11 @@ Beispielscripte:
 - Setzen einer HTML-Box mit dem 'ConditionIcon': [docs/oneCallConditionIcon.php](docs/oneCallConditionIcon.php)
 
 ## 7. Versions-Historie
+
+- 2.6 @ 03.01.2023 09:57
+  - Neu: Führen einer Statistik der API-Calls, Anzeige als Popup im Experten-Bereich
+  - Neu (OpenWeatherOneCall): Unterstürzung der API-Version 3.0
+  - update submodule CommonStubs
 
 - 2.5.1 @ 07.10.2022 13:59
   - update submodule CommonStubs

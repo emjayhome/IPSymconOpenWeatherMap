@@ -177,7 +177,9 @@ OpenWeatherMap.WindDirection
 siehe [hier](../README.md#6-anhang)
 
 Verweise:
-- https://openweathermap.org/current, https://openweathermap.org/forecast5
+- https://openweathermap.org/api
+- [Current weather data](https://openweathermap.org/current)
+- [5 day weather forecast](https://openweathermap.org/forecast5)
 
 ## 7. Versions-Historie
 

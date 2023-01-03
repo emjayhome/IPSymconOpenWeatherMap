@@ -4,13 +4,13 @@
 			"OpenWeatherMap - fetch current observations and forecast": "OpenWeatherMap - Abruf aktueller Beobachtungen und Vorhersagen",
 
 			"__function__": "CheckConfiguration",
-			"API-Key must be specified": "API-Key muss angegeben werden",
+			"API key must be specified": "API-Key muss angegeben werden",
 
 			"__elements__": "",
 			"Disable instance": "Instanz deaktivieren",
 
 			"Basic settings": "Grundeinstellung",
-			"API-Key": "API-Key",
+			"API key": "API-Key",
 			"station data - if position is not set, Modue 'Location' is used": "Angaben zur Station - falls die Position nicht angegeben ist, wird das Modul 'Location' verwendet",
 			"Longitude" : "Längengrad",
 			"Latitude" : "Breitengrad",
@@ -45,6 +45,8 @@
 
 			"Update interval": "Aktualisierungsintervall",
 			"Minutes": "Minuten",
+			"Hint: the update frequency of the OpenWeather model is not higher than once in 10 minutes (https://openweathermap.org/appid)":
+				"Hinweis: Die Aktualisierungsfrequenz des OpenWeather-Modells ist nicht höher als einmal in 10 Minuten (https://openweathermap.org/appid)",
 
 			"__variables__": "",
 			"absolute humidity": "absolute Luftfeuchtigkeit",

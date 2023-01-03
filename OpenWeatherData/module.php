@@ -53,7 +53,7 @@ class OpenWeatherData extends IPSModule
 
         $this->RegisterPropertyInteger('hourly_forecast_count', 0);
 
-        $this->RegisterPropertyInteger('update_interval', 5);
+        $this->RegisterPropertyInteger('update_interval', 15);
 
         $this->RegisterPropertyBoolean('with_current_condition', false);
 
@@ -61,6 +61,7 @@ class OpenWeatherData extends IPSModule
         $this->RegisterPropertyInteger('summary_script', 0);
 
         $this->RegisterAttributeString('UpdateInfo', '');
+        $this->RegisterAttributeString('ApiCallStats', json_encode([]));
 
         $this->InstallVarProfiles(false);
 
@@ -88,7 +89,7 @@ class OpenWeatherData extends IPSModule
         $appid = $this->ReadPropertyString('appid');
         if ($appid == '') {
             $this->SendDebug(__FUNCTION__, '"appid" is needed', 0);
-            $r[] = $this->Translate('API-Key must be specified');
+            $r[] = $this->Translate('API key must be specified');
         }
 
         return $r;
@@ -195,6 +196,21 @@ class OpenWeatherData extends IPSModule
             return;
         }
 
+        $apiLimits = [
+            [
+                'value' => 60,
+                'unit'  => 'minute',
+            ],
+            [
+                'value' => 1000000,
+                'unit'  => 'month',
+            ],
+        ];
+
+        $apiNotes = '';
+
+        $this->ApiCallsSetInfo($apiLimits, $apiNotes);
+
         $this->MaintainStatus(IS_ACTIVE);
 
         if (IPS_GetKernelRunlevel() == KR_READY) {
@@ -222,7 +238,7 @@ class OpenWeatherData extends IPSModule
                 [
                     'type'    => 'ValidationTextBox',
                     'name'    => 'appid',
-                    'caption' => 'API-Key'
+                    'caption' => 'API key'
                 ],
                 [
                     'type'    => 'Label',
@@ -371,11 +387,25 @@ class OpenWeatherData extends IPSModule
         ];
 
         $formElements[] = [
-            'type'    => 'NumberSpinner',
-            'minimum' => 0,
-            'suffix'  => 'Minutes',
-            'name'    => 'update_interval',
-            'caption' => 'Update interval'
+            'type'    => 'RowLayout',
+            'items'   => [
+                [
+                    'type'    => 'NumberSpinner',
+                    'minimum' => 0,
+                    'suffix'  => 'Minutes',
+                    'width'   => '200px',
+                    'name'    => 'update_interval',
+                    'caption' => 'Update interval'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => '   ',
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'Hint: the update frequency of the OpenWeather model is not higher than once in 10 minutes (https://openweathermap.org/appid)',
+                ],
+            ],
         ];
 
         return $formElements;
@@ -406,6 +436,7 @@ class OpenWeatherData extends IPSModule
             'expanded'  => false,
             'items'     => [
                 $this->GetInstallVarProfilesFormItem(),
+                $this->GetApiCallStatsFormItem(),
             ],
         ];
 
@@ -480,7 +511,7 @@ class OpenWeatherData extends IPSModule
         $lat = $this->ReadPropertyFloat('latitude');
         $lng = $this->ReadPropertyFloat('longitude');
         if ($lat == 0 || $lng == 0) {
-			$loc = $this->GetSystemLocation();
+            $loc = $this->GetSystemLocation();
             $lat = $loc['latitude'];
             $lng = $loc['longitude'];
         }
@@ -968,6 +999,8 @@ class OpenWeatherData extends IPSModule
             $this->SendDebug(__FUNCTION__, ' => statuscode=' . $statuscode . ', err=' . $err, 0);
             $this->MaintainStatus($statuscode);
         }
+
+        $this->ApiCallsCollect($url, $err, $statuscode);
 
         return $jdata;
     }

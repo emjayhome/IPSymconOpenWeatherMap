@@ -136,7 +136,9 @@ OpenWeatherMap.WindDirection
 siehe [hier](../README.md#6-anhang)
 
 Verweise:
-- https://openweathermap.org/api/one-call-api
+- https://openweathermap.org/api
+- [One Call API 2.5](https://openweathermap.org/api/one-call-api) 
+- [One Call API 3.0](https://openweathermap.org/api/one-call-3)
 
 ## 7. Versions-Historie
 

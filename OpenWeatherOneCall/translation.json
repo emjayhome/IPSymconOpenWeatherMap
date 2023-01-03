@@ -4,19 +4,24 @@
 			"OpenWeatherMap - fetch current observations and forecast": "OpenWeatherMap - Abruf aktueller Beobachtungen und Vorhersagen",
 
 			"__function__": "CheckConfiguration",
-			"API-Key must be specified": "API-Key muss angegeben werden",
+			"API key must be specified": "API-Key muss angegeben werden",
+
+			"__function__": "ApplyChanges",
+			"After the free number has been used, there will be a cost, see here for details":
+				"Nachdem die freie Anzahl verbraucht worden ist, entstehen Kosten, Details siehe",
 
 			"__elements__": "",
 			"Disable instance": "Instanz deaktivieren",
 
 			"Basic settings": "Grundeinstellung",
-			"API-Key": "API-Key",
+			"API key": "API-Key",
 			"station data - if position is not set, Modue 'Location' is used": "Angaben zur Station - falls die Position nicht angegeben ist, wird das Modul 'Location' verwendet",
 			"Longitude" : "Längengrad",
 			"Latitude" : "Breitengrad",
 			"Altitude" : "Höhe",
 			"Language setting for textual weather-information (de, en, ...)": "Spracheinstellung für textuelle Wetterinformationen (de, en, ...)",
 			"Language code": "Sprach-Code",
+			"API version": "API-Version",
 
 			"optional weather data": "optionale Wetterdaten",
 			" ... absolute Pressure": " ... absoluter Luftdruck",
@@ -45,6 +50,8 @@
 
 			"Update interval": "Aktualisierungsintervall",
 			"Minutes": "Minuten",
+			"Hint: the update frequency of the OpenWeather model is not higher than once in 10 minutes (https://openweathermap.org/appid)":
+				"Hinweis: Die Aktualisierungsfrequenz des OpenWeather-Modells ist nicht höher als einmal in 10 Minuten (https://openweathermap.org/appid)",
 
 			"Begin of minutely forecast-period": "Beginn des minütlichen Vorhersage-Zeitraumes",
 			"Begin of hourly forecast-period": "Beginn des stündlichen Vorhersage-Zeitraumes",
