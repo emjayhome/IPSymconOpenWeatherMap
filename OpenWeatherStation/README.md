@@ -211,7 +211,8 @@ echo json_encode($values);
 siehe [hier](../README.md#6-anhang)
 
 Verweise:
-- https://openweathermap.org/stations
+- https://openweathermap.org/api
+- [Weather Stations](https://openweathermap.org/stations)
 
 ## 7. Versions-Historie
 

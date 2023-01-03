@@ -30,7 +30,7 @@ _OpenWeatherData_:
 - Vorhersagen in 3-Stunden-Schritten [5 day weather forecast](https://openweathermap.org/forecast5)
 
 _OpenWeatherStation_:
-- Übertragung von Daten einer lokalen Wetterstation an _OpenWeather_
+- Übertragung von Daten einer lokalen Wetterstation an _OpenWeather_ [Weather Stations](https://openweathermap.org/stations)
 
 ## 2. Voraussetzungen
 
