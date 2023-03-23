@@ -819,7 +819,7 @@ class OpenWeatherOneCall extends IPSModule
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $id . ' (' . $clouds . '%)' . '</td>';
                  $forecast = $forecast . '<td><div class="icon ipsIcon' . $icon . '"></div></td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
-                $forecast = $forecast . '<td style="white-space:nowrap;">' . $pop . '% ' . $precip . '</td>';
+                $forecast = $forecast . '<td style="white-space:nowrap;">' . $pop . '% ' . $rain . '</td>';
             
                    $forecast = $forecast . '</tr>';
             }
