@@ -39,6 +39,7 @@
 			" ... Conditions": " ... Wetterbedingungen",
 			" ... Condition-icon": " ... Wetterbedingung-Symbol",
 			" ... Condition-id": " ... Wetterbedingung-Id",
+			" ... Forecast HTML": " ... Vorhersage als HTML",
 
 			"precipitation forecast by the minute (max 60 minutes)":
 				"minütliche Niederschlagsvorhersage (max 60 Minuten)",
@@ -64,6 +65,7 @@
 			"Cloudiness": "Bewölkung",
 			"Condition-icon": "Wetterbedingung-Symbol",
 			"Condition-id": "Wetterbedingung-Id",
+			"Forecast HTML": "Vorhersage als HTML",
 			"Conditions": "Wetterbedingungen",
 			"Current weather condition": "aktuelle Wetterbedingung",
 			"Day temperature": "Tagestemperatur",

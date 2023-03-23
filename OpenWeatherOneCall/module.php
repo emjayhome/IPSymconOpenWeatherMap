@@ -59,6 +59,7 @@ class OpenWeatherOneCall extends IPSModule
         $this->RegisterPropertyBoolean('with_conditions', false);
         $this->RegisterPropertyBoolean('with_icon', false);
         $this->RegisterPropertyBoolean('with_condition_id', false);
+        $this->RegisterPropertyBoolean('with_forecast_html', false);
 
         $this->RegisterPropertyInteger('minutely_forecast_count', 0);
         $this->RegisterPropertyInteger('hourly_forecast_count', 0);
@@ -139,6 +140,7 @@ class OpenWeatherOneCall extends IPSModule
         $with_conditions = $this->ReadPropertyBoolean('with_conditions');
         $with_icon = $this->ReadPropertyBoolean('with_icon');
         $with_condition_id = $this->ReadPropertyBoolean('with_condition_id');
+        $with_forecast_html = $this->ReadPropertyBoolean('with_forecast_html');
         $minutely_forecast_count = $this->ReadPropertyInteger('minutely_forecast_count');
         $hourly_forecast_count = $this->ReadPropertyInteger('hourly_forecast_count');
         $daily_forecast_count = $this->ReadPropertyInteger('daily_forecast_count');
@@ -165,6 +167,7 @@ class OpenWeatherOneCall extends IPSModule
         $this->MaintainVariable('Conditions', $this->Translate('Conditions'), VARIABLETYPE_STRING, '', $vpos++, $with_conditions);
         $this->MaintainVariable('ConditionIcon', $this->Translate('Condition-icon'), VARIABLETYPE_STRING, '', $vpos++, $with_icon);
         $this->MaintainVariable('ConditionId', $this->Translate('Condition-id'), VARIABLETYPE_STRING, '', $vpos++, $with_condition_id);
+        $this->MaintainVariable('Forecast', $this->Translate('Forecast HTML'), VARIABLETYPE_STRING, '', $vpos++, $with_forcast_html);
 
         for ($i = 0; $i < self::$MAX_MINUTELY_FORECAST; $i++) {
             $vpos = 1000 + (100 * $i);
@@ -239,7 +242,7 @@ class OpenWeatherOneCall extends IPSModule
 
         $vpos = 9000;
         $this->MaintainVariable('LastMeasurement', $this->Translate('last measurement'), VARIABLETYPE_INTEGER, '~UnixTimestamp', $vpos++, true);
-
+        
         $module_disable = $this->ReadPropertyBoolean('module_disable');
         if ($module_disable) {
             $this->MaintainTimer('UpdateData', 0);
@@ -409,6 +412,11 @@ class OpenWeatherOneCall extends IPSModule
                     'type'    => 'CheckBox',
                     'name'    => 'with_condition_id',
                     'caption' => ' ... Condition-id'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_forecast_html',
+                    'caption' => ' ... Forecast HTML'
                 ],
                 [
                     'type'    => 'Label',
@@ -598,7 +606,7 @@ class OpenWeatherOneCall extends IPSModule
             $excludeS[] = 'hourly';
         }
         $daily_forecast_count = $this->ReadPropertyInteger('daily_forecast_count');
-        if ($daily_forecast_count == 0) {
+        if ($daily_forecast_count == 0 && !$with_forecast_html) {
             $excludeS[] = 'daily';
         }
         if ($excludeS != []) {
@@ -634,6 +642,7 @@ class OpenWeatherOneCall extends IPSModule
         $with_conditions = $this->ReadPropertyBoolean('with_conditions');
         $with_icon = $this->ReadPropertyBoolean('with_icon');
         $with_condition_id = $this->ReadPropertyBoolean('with_condition_id');
+        $with_forecast_html = $this->ReadPropertyBoolean('with_forecast_html');
 
         $timestamp = $this->GetArrayElem($jdata, 'current.dt', 0);
         $temperature = $this->GetArrayElem($jdata, 'current.temp', 0);
@@ -738,6 +747,10 @@ class OpenWeatherOneCall extends IPSModule
 
         if ($with_condition_id) {
             $this->SetValue('ConditionId', $id);
+        }
+
+        if($with_forecast_html) {
+            $this->SetValue('Forecast', $id);
         }
 
         $minutely_forecast_count = $this->ReadPropertyInteger('minutely_forecast_count');
