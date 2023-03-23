@@ -750,8 +750,85 @@ class OpenWeatherOneCall extends IPSModule
         }
 
         if($with_forecast_html) {
-            $this->SetValue('Forecast', $id);
+            $forecast = '';
+	   
+            $forecast = $forecast . '<table style="width:100%">';
+            $forecast = $forecast . '<col>';
+            $forecast = $forecast . '<col>';
+            $forecast = $forecast . '<col>';
+            $forecast = $forecast . '<col>';
+            $forecast = $forecast . '<col>';
+
+            for($i = 0; $i < 2; $i++) {
+
+                $ent = $this->GetArrayElem($jdata, 'daily.' . $i, '');
+                if ($ent == false) {
+                    $this->SendDebug(__FUNCTION__, 'daily[' . $i . '] not in data', 0);
+                    break;
+                }
+                $this->SendDebug(__FUNCTION__, 'daily[' . $i . ']=' . print_r($ent, true), 0);
+
+                $begin_ts = $this->GetArrayElem($ent, 'dt', 0);
+                $temperature_morning = $this->GetArrayElem($ent, 'temp.morn', 0);
+                $temperature_day = $this->GetArrayElem($ent, 'temp.day', 0);
+                $temperature_evening = $this->GetArrayElem($ent, 'temp.eve', 0);
+                $temperature_night = $this->GetArrayElem($ent, 'temp.night', 0);
+                $temperature_min = $this->GetArrayElem($ent, 'temp.min', 0);
+                $temperature_max = $this->GetArrayElem($ent, 'temp.max', 0);
+    
+                $uvi = $this->GetArrayElem($ent, 'uvi', 0);
+                $pressure = $this->GetArrayElem($ent, 'pressure', 0);
+                $humidity = $this->GetArrayElem($ent, 'humidity', 0);
+    
+                $visibility = $this->GetArrayElem($ent, 'visibility', 0);
+    
+                $wind_speed = $this->GetArrayElem($ent, 'wind_speed', 0);
+                $wind_speed = (int) $this->ms2kmh($wind_speed);
+                $wind_deg = $this->GetArrayElem($ent, 'wind_deg', 0);
+                $wind_gust = $this->GetArrayElem($ent, 'wind_gust', 0);
+    
+                $pop = $this->GetArrayElem($ent, 'pop', 0);
+                $rain = $this->GetArrayElem($ent, 'rain', 0);
+    
+                $clouds = $this->GetArrayElem($ent, 'clouds', 0);
+    
+                $conditions = '';
+                $weather = $this->GetArrayElem($ent, 'weather', '');
+                if ($weather != '') {
+                    foreach ($weather as $w) {
+                        $description = $this->GetArrayElem($w, 'description', '');
+                        if ($description != '') {
+                            $conditions .= ($conditions != '' ? ', ' : '') . $description;
+                        }
+                    }
+                    $icon = $this->GetArrayElem($weather, '0.icon', '');
+                    $id = $this->GetArrayElem($weather, '0.id', '');
+                }  
+            
+                /* $precip = 'Regen';
+                 if($ds->forecastPrecipType[$i] == 'snow') {
+                     $precip = 'Schnee';
+                 } else if($ds->forecastPrecipType[$i] == 'sleet') {
+                     $precip = 'Graupel';
+                 }
+                 */
+            
+                $forecast = $forecast . '<tr>';
+     
+                 $forecast = $forecast . '<td style="white-space:nowrap;">' . date("m.d.y", $begin_ts) . '</td>';
+                 $forecast = $forecast . '<td style="white-space:nowrap;">' . $id . ' (' . $clouds . '%)' . '</td>';
+                 $forecast = $forecast . '<td><div class="icon ipsIcon' . $icon . '"></div></td>';
+                 $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
+                $forecast = $forecast . '<td style="white-space:nowrap;">' . $pop . '% ' . $precip . '</td>';
+            
+                   $forecast = $forecast . '</tr>';
+            }
+            
+            $forecast = $forecast . '</table>';
+
+            $this->SetValue('Forecast', $forecast);
         }
+
 
         $minutely_forecast_count = $this->ReadPropertyInteger('minutely_forecast_count');
         for ($i = 0; $i < $minutely_forecast_count; $i++) {
