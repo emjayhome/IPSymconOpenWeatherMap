@@ -606,7 +606,8 @@ class OpenWeatherOneCall extends IPSModule
             $excludeS[] = 'hourly';
         }
         $daily_forecast_count = $this->ReadPropertyInteger('daily_forecast_count');
-        if ($daily_forecast_count == 0 && !$with_forecast_html) {
+        $with_forecast_html = $this->ReadPropertyBoolean('with_forecast_html');
+        if (($daily_forecast_count == 0) && !$with_forecast_html) {
             $excludeS[] = 'daily';
         }
         if ($excludeS != []) {
@@ -642,7 +643,6 @@ class OpenWeatherOneCall extends IPSModule
         $with_conditions = $this->ReadPropertyBoolean('with_conditions');
         $with_icon = $this->ReadPropertyBoolean('with_icon');
         $with_condition_id = $this->ReadPropertyBoolean('with_condition_id');
-        $with_forecast_html = $this->ReadPropertyBoolean('with_forecast_html');
 
         $timestamp = $this->GetArrayElem($jdata, 'current.dt', 0);
         $temperature = $this->GetArrayElem($jdata, 'current.temp', 0);
