@@ -167,7 +167,7 @@ class OpenWeatherOneCall extends IPSModule
         $this->MaintainVariable('Conditions', $this->Translate('Conditions'), VARIABLETYPE_STRING, '', $vpos++, $with_conditions);
         $this->MaintainVariable('ConditionIcon', $this->Translate('Condition-icon'), VARIABLETYPE_STRING, '', $vpos++, $with_icon);
         $this->MaintainVariable('ConditionId', $this->Translate('Condition-id'), VARIABLETYPE_STRING, '', $vpos++, $with_condition_id);
-        $this->MaintainVariable('Forecast', $this->Translate('Forecast HTML'), VARIABLETYPE_STRING, '', $vpos++, $with_forcast_html);
+        $this->MaintainVariable('Forecast', $this->Translate('Forecast HTML'), VARIABLETYPE_STRING, '', $vpos++, $with_forecast_html);
 
         for ($i = 0; $i < self::$MAX_MINUTELY_FORECAST; $i++) {
             $vpos = 1000 + (100 * $i);
