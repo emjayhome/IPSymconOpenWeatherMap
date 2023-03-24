@@ -564,6 +564,22 @@ class OpenWeatherOneCall extends IPSModule
         $this->MaintainTimer('UpdateData', $msec);
     }
 
+    public function GetDayString($timestamp)
+    {
+        $date = date('Y-m-d', $timestamp);
+        $today = date('Y-m-d');
+        $tomorrow = date('Y-m-d', strtotime('tomorrow')); 
+        $day_after_tomorrow = date('Y-m-d', strtotime('tomorrow + 1 day'));
+
+        if ($date == $today) {
+            return "Heute";
+        } else if ($date == $tomorrow) {
+            return "Morgen";
+        } else if ($date == $day_after_tomorrow) {
+            return "Übermorgen";
+        }
+    }
+
     public function UpdateData()
     {
         if ($this->CheckStatus() == self::$STATUS_INVALID) {
@@ -815,7 +831,7 @@ class OpenWeatherOneCall extends IPSModule
             
                 $forecast = $forecast . '<tr>';
      
-                 $forecast = $forecast . '<td style="white-space:nowrap;">' . date("m.d.y", $begin_ts) . '</td>';
+                 $forecast = $forecast . '<td style="white-space:nowrap;">' . $this->GetDayString($begin_ts) . '</td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $id . ' (' . $clouds . '%)' . '</td>';
                  $forecast = $forecast . '<td><div class="icon ipsIcon' . $icon . '"></div></td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
