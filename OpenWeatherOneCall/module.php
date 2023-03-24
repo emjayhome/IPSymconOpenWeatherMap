@@ -811,16 +811,42 @@ class OpenWeatherOneCall extends IPSModule
                 $conditions = '';
                 $weather = $this->GetArrayElem($ent, 'weather', '');
                 if ($weather != '') {
-                    foreach ($weather as $w) {
-                        $description = $this->GetArrayElem($w, 'description', '');
-                        if ($description != '') {
-                            $conditions .= ($conditions != '' ? ', ' : '') . $description;
-                        }
-                    }
+                    $main = $this->GetArrayElem($weather[0], 'main', '');
+                    $description = $this->GetArrayElem($weather[0], 'description', '');
                     $icon = $this->GetArrayElem($weather, '0.icon', '');
                     $id = $this->GetArrayElem($weather, '0.id', '');
-                }  
+                } else {
+                    $this->SendDebug(__FUNCTION__, "Missing weather array in forecast", 0);
+                } 
             
+                $iconUrls = [
+                    'clear-day' => 'Sunny',
+                    'clear-night' => 'MoonNight',
+                    'rain' => 'Rain',
+                    'snow' => 'Snow',
+                    'sleet' => 'Sleet',
+                    'wind' => 'Wind',
+                    'fog' => 'FogDay',
+                    'cloudy' => 'Clouds',
+                    'partly-cloudy-day' => 'PartlyCloudyDay',
+                    'partly-cloudy-night' => 'PartlyCloudyNight',
+                    'unknown' 			=>'Question'
+                ];
+                
+                $conditionTexts = [
+                    'clear-day' => 'Sonne',
+                    'clear-night' => 'Klar',
+                    'rain' => 'Regen',
+                    'snow' => 'Schnee',
+                    'sleet' => 'Graupel',
+                    'wind' => 'Wind',
+                    'fog' => 'Nebel',
+                    'cloudy' => 'Bewölkt',
+                    'partly-cloudy-day' => 'Bewölkt',
+                    'partly-cloudy-night' => 'Bewölkt',
+                    'unknown' 			=>'Unbekannt'
+                ];
+
                 /* $precip = 'Regen';
                  if($ds->forecastPrecipType[$i] == 'snow') {
                      $precip = 'Schnee';
@@ -832,7 +858,7 @@ class OpenWeatherOneCall extends IPSModule
                 $forecast = $forecast . '<tr>';
      
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $this->GetDayString($begin_ts) . '</td>';
-                 $forecast = $forecast . '<td style="white-space:nowrap;">' . $id . ' (' . $clouds . '%)' . '</td>';
+                 $forecast = $forecast . '<td style="white-space:nowrap;">' . $main . ' (' . $clouds . '%)' . '</td>';
                  $forecast = $forecast . '<td><div class="icon ipsIcon' . $icon . '"></div></td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
                 $forecast = $forecast . '<td style="white-space:nowrap;">' . $pop . '% ' . $rain . '</td>';
