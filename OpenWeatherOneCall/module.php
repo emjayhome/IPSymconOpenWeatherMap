@@ -1396,7 +1396,7 @@ class OpenWeatherOneCall extends IPSModule
                 } else {
                     return 23; // Sun
                 }
-            case $condition_id == 801:
+            case $condition_id >= 801 && $condition_id <= 803:
                 if($is_night) {
                     return 15; // PartlyCloudyDay
                 } else {
