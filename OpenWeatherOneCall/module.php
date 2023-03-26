@@ -849,7 +849,7 @@ class OpenWeatherOneCall extends IPSModule
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $main . ' (' . $clouds . '%)' . '</td>';
                  $forecast = $forecast . '<td><div class="icon ipsIcon' . $this->ConvertConditionId2Icon($id) . '"></div></td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
-                $forecast = $forecast . '<td style="white-space:nowrap;">' . round($rain+$snow,1) . mm .  ' (' . round($pop * 100, 0) . '%)</td>';
+                $forecast = $forecast . '<td style="white-space:nowrap;">' . round($rain+$snow,1) . 'mm  (' . round($pop * 100, 0) . '%)</td>';
             
                    $forecast = $forecast . '</tr>';
             }
