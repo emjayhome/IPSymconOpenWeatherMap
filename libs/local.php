@@ -74,9 +74,32 @@ trait OpenWeatherMapLocalLib
         $this->CreateVarProfile('OpenWeatherMap.Cloudiness', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Cloud', [], $reInstall);
 
         $associations = [
-            ['Wert' =>  0, 'Name' => 'ChanceStorm', 'Icon' => 'ChanceStorm'],
-            ['Wert' =>  1, 'Name' => 'CloudLighting', 'Icon' => 'CloudLighting'],
-            ['Wert' =>  14, 'Name' => 'PartlyCloudyDay', 'Icon' => 'PartlyCloudyDay'],
+            ['Wert' =>  0, 'Name' => 'ChanceStorm', 'Icon' => 'ChanceStorm', 'Farbe' => -1],
+            ['Wert' =>  1, 'Name' => 'CloudLighting', 'Icon' => 'CloudLighting', 'Farbe' => -1],
+            ['Wert' =>  2, 'Name' => 'Clouds', 'Icon' => 'Clouds', 'Farbe' => -1],
+            ['Wert' =>  3, 'Name' => 'Dry', 'Icon' => 'Dry', 'Farbe' => -1],
+            ['Wert' =>  4, 'Name' => 'Dust', 'Icon' => 'Dust', 'Farbe' => -1],
+            ['Wert' =>  5, 'Name' => 'Earthquakes', 'Icon' => 'Earthquakes', 'Farbe' => -1],
+            ['Wert' =>  6, 'Name' => 'Fires', 'Icon' => 'Fires', 'Farbe' => -1],
+            ['Wert' =>  7, 'Name' => 'Floods', 'Icon' => 'Floods', 'Farbe' => -1],
+            ['Wert' =>  8, 'Name' => 'FogDay', 'Icon' => 'FogDay', 'Farbe' => -1],
+            ['Wert' =>  9, 'Name' => 'FogNight', 'Icon' => 'FogNight', 'Farbe' => -1],
+            ['Wert' =>  10, 'Name' => 'Hail', 'Icon' => 'Hail', 'Farbe' => -1],
+            ['Wert' =>  11, 'Name' => 'Icy', 'Icon' => 'Icy', 'Farbe' => -1],
+            ['Wert' =>  12, 'Name' => 'LittleRain', 'Icon' => 'LittleRain', 'Farbe' => -1],
+            ['Wert' =>  13, 'Name' => 'LittleSnow', 'Icon' => 'LittleSnow', 'Farbe' => -1],
+            ['Wert' =>  14, 'Name' => 'PartlyCloudyDay', 'Icon' => 'PartlyCloudyDay', 'Farbe' => -1],
+            ['Wert' =>  15, 'Name' => 'PartlyCloudyNight', 'Icon' => 'PartlyCloudyNight', 'Farbe' => -1],
+            ['Wert' =>  16, 'Name' => 'Rain', 'Icon' => 'Rain', 'Farbe' => -1],
+            ['Wert' =>  17, 'Name' => 'Sleet', 'Icon' => 'Sleet', 'Farbe' => -1],
+            ['Wert' =>  18, 'Name' => 'Snow', 'Icon' => 'Snow', 'Farbe' => -1],
+            ['Wert' =>  19, 'Name' => 'SnowStorm', 'Icon' => 'SnowStorm', 'Farbe' => -1],
+            ['Wert' =>  20, 'Name' => 'Storm', 'Icon' => 'Storm', 'Farbe' => -1],
+            ['Wert' =>  21, 'Name' => 'Wet', 'Icon' => 'Wet', 'Farbe' => -1],
+            ['Wert' =>  22, 'Name' => 'Question', 'Icon' => 'Question', 'Farbe' => -1],
+            ['Wert' =>  23, 'Name' => 'Sun', 'Icon' => 'Sun', 'Farbe' => -1],
+            ['Wert' =>  24, 'Name' => 'MoonNight', 'Icon' => 'MoonNight', 'Farbe' => -1],
+            ['Wert' =>  25, 'Name' => 'Wind', 'Icon' => 'Wind', 'Farbe' => -1],
         ];
         $this->CreateVarProfile('OpenWeatherMap.WeatherIcon', VARIABLETYPE_INTEGER, '', 0, 1, 0, 0, '', $associations, $reInstall);  
     }

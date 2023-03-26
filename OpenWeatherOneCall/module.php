@@ -1359,23 +1359,46 @@ class OpenWeatherOneCall extends IPSModule
     public function ConvertConditionId2Icon($condition_id, $is_night = false)
     {
         switch(true) {
-            case $condition_id >= 730 && $condition_id <=739:
-            case $condition_id >= 750 && $condition_id <=759:
-            case $condition_id >= 760 && $condition_id <=769:
+            case $condition_id >= 300 && $condition_id <= 399:
+                return 12; // LittleRain
+            case $condition_id >= 500 && $condition_id <= 599:
+                return 16; // LittleRain            
+            case $condition_id == 600:
+                return 13; // LittleSnow
+            case $condition_id >= 601 && $condition_id <= 602:
+                return 18; // LittleSnow
+            case $condition_id >= 610 && $condition_id <= 619:
+            case $condition_id >= 620 && $condition_id <= 629:
+                return 17; // LittleSnow  
+            case $condition_id >= 720 && $condition_id <= 729:
+                return 21; // Wet                         
+            case $condition_id >= 710 && $condition_id <= 719:
+            case $condition_id == 762:
+                return 6; // Fires
+            case $condition_id >= 700 && $condition_id <= 709:
+            case $condition_id == 741:
+                if($is_night) {
+                    return 9; // FogNight
+                } else {
+                    return 8; // FogDay
+                }   
+            case $condition_id >= 730 && $condition_id <= 739:
+            case $condition_id >= 750 && $condition_id <= 759:
+            case $condition_id >= 760 && $condition_id <= 769:
                 return 4; // Dust
-            case 800:
+            case $condition_id == 800:
                 if($is_night) {
                     return 24; // MoonNight
                 } else {
                     return 23; // Sun
                 }
-            case 801:
+            case $condition_id == 801:
                 if($is_night) {
                     return 14; // PartlyCloudyDay
                 } else {
                     return 15; // PartlyCloudyNight
                 }  
-            case 804:
+            case $condition_id == 804:
                 return 2; // Clouds
             default:
                 return 22;
