@@ -165,7 +165,7 @@ class OpenWeatherOneCall extends IPSModule
         $this->MaintainVariable('Snow_1h', $this->Translate('Snowfall of last hour'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Snowfall', $vpos++, true);
         $this->MaintainVariable('Cloudiness', $this->Translate('Cloudiness'), VARIABLETYPE_FLOAT, 'OpenWeatherMap.Cloudiness', $vpos++, $with_cloudiness);
         $this->MaintainVariable('Conditions', $this->Translate('Conditions'), VARIABLETYPE_STRING, '', $vpos++, $with_conditions);
-        $this->MaintainVariable('ConditionIcon', $this->Translate('Condition-icon'), VARIABLETYPE_STRING, '', $vpos++, $with_icon);
+        $this->MaintainVariable('ConditionIcon', $this->Translate('Condition-icon'), VARIABLETYPE_INTEGER, 'OpenWeatherMap.WeatherIcon', $vpos++, $with_icon);
         $this->MaintainVariable('ConditionId', $this->Translate('Condition-id'), VARIABLETYPE_STRING, '', $vpos++, $with_condition_id);
         $this->MaintainVariable('Forecast', $this->Translate('Forecast HTML'), VARIABLETYPE_STRING, '', $vpos++, $with_forecast_html);
 
@@ -204,7 +204,7 @@ class OpenWeatherOneCall extends IPSModule
             $this->MaintainVariable($pre . 'RainProbability' . $post, $this->Translate('Rain propability') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.RainProbability', $vpos++, $use && $with_rain_probability);
             $this->MaintainVariable($pre . 'Cloudiness' . $post, $this->Translate('Cloudiness') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Cloudiness', $vpos++, $use && $with_cloudiness);
             $this->MaintainVariable($pre . 'Conditions' . $post, $this->Translate('Conditions') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_conditions);
-            $this->MaintainVariable($pre . 'ConditionIcon' . $post, $this->Translate('Condition-icon') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_icon);
+            $this->MaintainVariable($pre . 'ConditionIcon' . $post, $this->Translate('Condition-icon') . $s, VARIABLETYPE_INTEGER, 'OpenWeatherMap.WeatherIcon', $vpos++, $use && $with_icon);
             $this->MaintainVariable($pre . 'ConditionId' . $post, $this->Translate('Condition-id') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_condition_id);
         }
 
@@ -236,7 +236,7 @@ class OpenWeatherOneCall extends IPSModule
             $this->MaintainVariable($pre . 'Rain' . $post, $this->Translate('Rainfall') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Rainfall', $vpos++, $use);
             $this->MaintainVariable($pre . 'Cloudiness' . $post, $this->Translate('Cloudiness') . $s, VARIABLETYPE_FLOAT, 'OpenWeatherMap.Cloudiness', $vpos++, $use && $with_cloudiness);
             $this->MaintainVariable($pre . 'Conditions' . $post, $this->Translate('Conditions') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_conditions);
-            $this->MaintainVariable($pre . 'ConditionIcon' . $post, $this->Translate('Condition-icon') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_icon);
+            $this->MaintainVariable($pre . 'ConditionIcon' . $post, $this->Translate('Condition-icon') . $s, VARIABLETYPE_INTEGER, 'OpenWeatherMap.WeatherIcon', $vpos++, $use && $with_icon);
             $this->MaintainVariable($pre . 'ConditionId' . $post, $this->Translate('Condition-id') . $s, VARIABLETYPE_STRING, '', $vpos++, $use && $with_condition_id);
         }
 
@@ -564,22 +564,6 @@ class OpenWeatherOneCall extends IPSModule
         $this->MaintainTimer('UpdateData', $msec);
     }
 
-    public function GetDayString($timestamp)
-    {
-        $date = date('Y-m-d', $timestamp);
-        $today = date('Y-m-d');
-        $tomorrow = date('Y-m-d', strtotime('tomorrow')); 
-        $day_after_tomorrow = date('Y-m-d', strtotime('tomorrow + 1 day'));
-
-        if ($date == $today) {
-            return "Heute";
-        } else if ($date == $tomorrow) {
-            return "Morgen";
-        } else if ($date == $day_after_tomorrow) {
-            return "Übermorgen";
-        }
-    }
-
     public function UpdateData()
     {
         if ($this->CheckStatus() == self::$STATUS_INVALID) {
@@ -758,7 +742,7 @@ class OpenWeatherOneCall extends IPSModule
         }
 
         if ($with_icon) {
-            $this->SetValue('ConditionIcon', $icon);
+            $this->SetValue('ConditionIcon', $this->ConvertConditionId2Icon($id));
         }
 
         if ($with_condition_id) {
@@ -985,7 +969,7 @@ class OpenWeatherOneCall extends IPSModule
             }
 
             if ($with_icon) {
-                $this->SetValue($pre . 'ConditionIcon' . $post, $icon);
+                $this->SetValue($pre . 'ConditionIcon' . $post, $this->ConvertConditionId2Icon($id));
             }
 
             if ($with_condition_id) {
@@ -1094,7 +1078,7 @@ class OpenWeatherOneCall extends IPSModule
             }
 
             if ($with_icon) {
-                $this->SetValue($pre . 'ConditionIcon' . $post, $icon);
+                $this->SetValue($pre . 'ConditionIcon' . $post, $this->ConvertConditionId2Icon($id));
             }
 
             if ($with_condition_id) {
@@ -1356,4 +1340,46 @@ class OpenWeatherOneCall extends IPSModule
         $this->SendDebug(__FUNCTION__, 'size=' . strlen($data) . ', data=' . $data, 0);
         return $data;
     }
+
+    public function GetDayString($timestamp)
+    {
+        $date = date('Y-m-d', $timestamp);
+        $today = date('Y-m-d');
+        $tomorrow = date('Y-m-d', strtotime('tomorrow')); 
+
+        if ($date == $today) {
+            return "Heute";
+        } else if ($date == $tomorrow) {
+            return "Morgen";
+        } else {
+            return "Unbekannt";
+        }
+    }
+
+    public function ConvertConditionId2Icon($condition_id, $is_night = false)
+    {
+        switch(true) {
+            case $condition_id >= 730 && $condition_id <=739:
+            case $condition_id >= 750 && $condition_id <=759:
+            case $condition_id >= 760 && $condition_id <=769:
+                return 4; // Dust
+            case 800:
+                if($is_night) {
+                    return 24; // MoonNight
+                } else {
+                    return 23; // Sun
+                }
+            case 801:
+                if($is_night) {
+                    return 14; // PartlyCloudyDay
+                } else {
+                    return 15; // PartlyCloudyNight
+                }  
+            case 804:
+                return 2; // Clouds
+            default:
+                return 22;
+        }
+    }
+
 }

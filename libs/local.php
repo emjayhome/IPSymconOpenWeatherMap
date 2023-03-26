@@ -72,5 +72,12 @@ trait OpenWeatherMapLocalLib
         $this->CreateVarProfile('OpenWeatherMap.RainProbability', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Rainfall', [], $reInstall);
         $this->CreateVarProfile('OpenWeatherMap.Snowfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Snow', [], $reInstall);
         $this->CreateVarProfile('OpenWeatherMap.Cloudiness', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Cloud', [], $reInstall);
+
+        $associations = [
+            ['Wert' =>  0, 'Name' => 'ChanceStorm', 'Icon' => 'ChanceStorm'],
+            ['Wert' =>  1, 'Name' => 'CloudLighting', 'Icon' => 'CloudLighting'],
+            ['Wert' =>  14, 'Name' => 'PartlyCloudyDay', 'Icon' => 'PartlyCloudyDay'],
+        ];
+        $this->CreateVarProfile('OpenWeatherMap.WeatherIcon', VARIABLETYPE_INTEGER, '', 0, 1, 0, 0, '', $associations, $reInstall);  
     }
 }
