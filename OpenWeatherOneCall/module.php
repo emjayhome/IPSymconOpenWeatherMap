@@ -792,6 +792,7 @@ class OpenWeatherOneCall extends IPSModule
     
                 $pop = $this->GetArrayElem($ent, 'pop', 0);
                 $rain = $this->GetArrayElem($ent, 'rain', 0);
+                $snow = $this->GetArrayElem($ent, 'snow', 0);
     
                 $clouds = $this->GetArrayElem($ent, 'clouds', 0);
     
@@ -846,9 +847,9 @@ class OpenWeatherOneCall extends IPSModule
      
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $this->GetDayString($begin_ts) . '</td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $main . ' (' . $clouds . '%)' . '</td>';
-                 $forecast = $forecast . '<td><div class="icon ipsIcon' . $icon . '"></div></td>';
+                 $forecast = $forecast . '<td><div class="icon ipsIcon' . $this->ConvertConditionId2Icon($id) . '"></div></td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
-                $forecast = $forecast . '<td style="white-space:nowrap;">' . $pop . '% ' . $rain . '</td>';
+                $forecast = $forecast . '<td style="white-space:nowrap;">' . round($rain+$snow,1) . mm .  ' (' . round($pop * 100, 0) . '%)</td>';
             
                    $forecast = $forecast . '</tr>';
             }
