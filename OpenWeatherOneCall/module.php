@@ -645,6 +645,8 @@ class OpenWeatherOneCall extends IPSModule
         $with_condition_id = $this->ReadPropertyBoolean('with_condition_id');
 
         $timestamp = $this->GetArrayElem($jdata, 'current.dt', 0);
+        $timestamp_sunrise = $this->GetArrayElem($jdata, 'current.sunrise', 0);
+        $timestamp_sunset = $this->GetArrayElem($jdata, 'current.sunset', 0);
         $temperature = $this->GetArrayElem($jdata, 'current.temp', 0);
         $pressure = $this->GetArrayElem($jdata, 'current.pressure', 0);
         $humidity = $this->GetArrayElem($jdata, 'current.humidity', 0);
@@ -742,7 +744,8 @@ class OpenWeatherOneCall extends IPSModule
         }
 
         if ($with_icon) {
-            $this->SetValue('ConditionIcon', $this->ConvertConditionId2Icon($id));
+            $is_night = !(($timestamp > $timestamp_sunrise) && ($timestamp < $timestamp_sunset));
+            $this->SetValue('ConditionIcon', $this->ConvertConditionId2Icon($id, $is_night));
         }
 
         if ($with_condition_id) {
