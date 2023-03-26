@@ -1361,6 +1361,7 @@ class OpenWeatherOneCall extends IPSModule
 
     public function ConvertConditionId2Icon($condition_id, $is_night = false)
     {
+        $this->SendDebug(__FUNCTION__, "Condition-ID: " . $condition_id . " Is Night: " . $is_night, 0);    
         switch(true) {
             case $condition_id >= 300 && $condition_id <= 399:
                 return 12; // LittleRain
@@ -1397,9 +1398,9 @@ class OpenWeatherOneCall extends IPSModule
                 }
             case $condition_id == 801:
                 if($is_night) {
-                    return 14; // PartlyCloudyDay
+                    return 15; // PartlyCloudyDay
                 } else {
-                    return 15; // PartlyCloudyNight
+                    return 14; // PartlyCloudyNight
                 }  
             case $condition_id == 804:
                 return 2; // Clouds
