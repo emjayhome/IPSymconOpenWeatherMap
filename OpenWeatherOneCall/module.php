@@ -875,7 +875,7 @@ class OpenWeatherOneCall extends IPSModule
                 $forecast = $forecast . '<tr>';
      
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $this->GetDayString($begin_ts) . '</td>';
-                 $forecast = $forecast . '<td style="white-space:nowrap;">' . $main . ' (' . $clouds . '%)' . '</td>';
+                 $forecast = $forecast . '<td style="white-space:nowrap;">' . $this->Translate($main) . ' (' . $clouds . '%)' . '</td>';
                  $forecast = $forecast . '<td><div class="icon ipsIcon' . self::$weather_icon_mapping[$this->ConvertConditionId2Icon($id)] . '"></div></td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
                 $forecast = $forecast . '<td style="white-space:nowrap;">' . round($rain+$snow,1) . 'mm  (' . round($pop * 100, 0) . '%)</td>';

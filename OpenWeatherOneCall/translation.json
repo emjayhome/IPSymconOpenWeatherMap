@@ -123,6 +123,10 @@
 			"Hurricane force": "orkanartiger Sturm",
 			"Violent storm": "Orkan",
 
+			"Thundestorm": "Gewitter",
+			"Drizzle": "Schneeregen",
+			"Rain": "Regen",
+
 			"__actions__": "",
 			"Update weatherdata": "Aktualisiere Wetterdaten",
 
