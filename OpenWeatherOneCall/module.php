@@ -21,6 +21,7 @@ class OpenWeatherOneCall extends IPSModule
         0 => "ChanceStorm",
         1 => "CloudLighting",
         2 => "Clouds",
+        14 => "PartlyCloudyDay"
     ];
 
     private $ModuleDir;
