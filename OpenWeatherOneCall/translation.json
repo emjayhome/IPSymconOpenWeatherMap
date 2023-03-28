@@ -134,10 +134,10 @@
 			"Fog": "Nebel",
 			"Sand": "Sand",
 			"Ash": "Asche",
-			"Squall": "Böen",
+			"Squall": "Windböen",
 			"Tornado": "Sturm",
 			"Clear": "Klar",
-			"Clouds": "Wolken",
+			"Clouds": "Bewölkt",
 
 			"__actions__": "",
 			"Update weatherdata": "Aktualisiere Wetterdaten",
