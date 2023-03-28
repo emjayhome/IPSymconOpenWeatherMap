@@ -5,6 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/../libs/common.php';
 require_once __DIR__ . '/../libs/local.php';
 
+$weather_icon_mapping = [
+    0 => "ChanceStorm",
+    1 => "CloudLighting",
+    2 => "Clouds",
+];
+
 class OpenWeatherOneCall extends IPSModule
 {
     use OpenWeather\StubsCommonLib;
@@ -847,7 +853,7 @@ class OpenWeatherOneCall extends IPSModule
      
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $this->GetDayString($begin_ts) . '</td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . $main . ' (' . $clouds . '%)' . '</td>';
-                 $forecast = $forecast . '<td><div class="icon ipsIcon' . $this->ConvertConditionId2Icon($id) . '"></div></td>';
+                 $forecast = $forecast . '<td><div class="icon ipsIcon' . $weather_icon_mapping[$this->ConvertConditionId2Icon($id)] . '"></div></td>';
                  $forecast = $forecast . '<td style="white-space:nowrap;">' . round($temperature_min,1) . '°C bis ' . round($temperature_max,1) . '°C</td>';
                 $forecast = $forecast . '<td style="white-space:nowrap;">' . round($rain+$snow,1) . 'mm  (' . round($pop * 100, 0) . '%)</td>';
             
