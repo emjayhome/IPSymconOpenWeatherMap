@@ -1438,5 +1438,4 @@ class OpenWeatherOneCall extends IPSModule
                 return 22;
         }
     }
-
 }
