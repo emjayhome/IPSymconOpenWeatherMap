@@ -97,7 +97,7 @@ trait OpenWeatherMapLocalLib
             ['Wert' =>  20, 'Name' => 'Storm', 'Icon' => 'Storm', 'Farbe' => -1],
             ['Wert' =>  21, 'Name' => 'Wet', 'Icon' => 'Wet', 'Farbe' => -1],
             ['Wert' =>  22, 'Name' => 'Question', 'Icon' => 'Question', 'Farbe' => -1],
-            ['Wert' =>  23, 'Name' => 'Sun', 'Icon' => 'Sun', 'Farbe' => -1],
+            ['Wert' =>  23, 'Name' => 'Sunny', 'Icon' => 'Sunny', 'Farbe' => -1],
             ['Wert' =>  24, 'Name' => 'MoonNight', 'Icon' => 'MoonNight', 'Farbe' => -1],
             ['Wert' =>  25, 'Name' => 'Wind', 'Icon' => 'Wind', 'Farbe' => -1],
         ];

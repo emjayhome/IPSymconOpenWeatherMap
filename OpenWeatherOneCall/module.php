@@ -41,7 +41,7 @@ class OpenWeatherOneCall extends IPSModule
         20 => "Storm",
         21 => "Wet",
         22 => "Question",
-        23 => "Sun",
+        23 => "Sunny",
         24 => "MoonNight",
         25 => "Wind",       
     ];
@@ -1424,7 +1424,7 @@ class OpenWeatherOneCall extends IPSModule
                 if($is_night) {
                     return 24; // MoonNight
                 } else {
-                    return 23; // Sun
+                    return 23; // Sunny
                 }
             case $condition_id >= 801 && $condition_id <= 803:
                 if($is_night) {
